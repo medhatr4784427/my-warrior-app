@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دستور المقاتل الرقمي - اللوحة التفاعلية الشاملة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        cairo: ['Cairo', 'sans-serif'], 
+                        tajawal: ['Tajawal', 'sans-serif'] 
+                    },
+                    colors: {
+                        slate: { 
+                            950: '#030712', 
+                            900: '#090d16', 
+                            800: '#111827', 
+                            700: '#1f2937',
+                            600: '#374151'
+                        },
+                        neon: { 
+                            emerald: '#10B981', 
+                            gold: '#F59E0B', 
+                            ruby: '#F43F5E', 
+                            cyan: '#06B6D4', 
+                            purple: '#8B5CF6' 
+                        }
+                    },
+                    boxShadow: {
+                        'neon-emerald': '0 0 20px rgba(16, 185, 129, 0.25)',
+                        'neon-cyan': '0 0 20px rgba(6, 182, 212, 0.25)',
+                        'neon-purple': '0 0 20px rgba(139, 92, 246, 0.25)',
+                        'neon-gold': '0 0 20px rgba(245, 158, 11, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Cairo', 'Tajawal', sans-serif; 
+            background-color: #030712; 
+            color: #f3f4f6; 
+            transition: filter 0.5s ease, background-color 0.5s ease;
+        }
+        .grayscale-mode {
+            filter: grayscale(100%) !important;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #10B981; }
+        
+        .glass-panel { 
+            background: rgba(9, 13, 22, 0.85); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.04); 
+        }
+        .active-pulse {
+            animation: pulse-glow 2s infinite alternate;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.2); }
+            100% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.5); border-color: rgba(16, 185, 129, 0.7); }
+        }
+        .active-pulse-cyan {
+            animation: pulse-glow-cyan 2s infinite alternate;
+        }
+        @keyframes pulse-glow-cyan {
+            0% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.15); border-color: rgba(6, 182, 212, 0.2); }
+            100% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.5); border-color: rgba(6, 182, 212, 0.7); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col overflow-x-hidden relative selection:bg-neon-emerald selection:text-slate-950">
+
+    <div class="absolute top-0 left-0 right-0 h-[600px] bg-[linear-gradient(to_bottom,rgba(16,185,129,0.02)_1px,transparent_1px),linear-gradient(to_right,rgba(16,185,129,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none z-0"></div>
+    <div class="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-neon-emerald/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-neon-cyan/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
+
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 px-4 lg:px-8 py-3.5 flex flex-col md:flex-row justify-between items-center gap-4 shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-emerald to-neon-cyan flex items-center justify-center text-xl shadow-neon-emerald">🥷</div>
+            <div>
+                <h1 class="text-lg font-black text-white flex items-center gap-2">دُسْتُور الْمُقَاتِل الحَيّ <span class="text-xs bg-neon-emerald/10 text-neon-emerald px-2 py-0.5 rounded font-normal">إصدار الفرم الشامل</span></h1>
+                <p class="text-[11px] text-slate-400 font-tajawal">يعمل تلقائياً بناءً على وقتك الحالي • أسبوع الفرم: الأربعاء - الثلاثاء</p>
+            </div>
+        </div>
+
+        <div class="flex items-center flex-wrap justify-center gap-3 text-sm">
+            <button onclick="toggleGrayscaleMode()" id="grayscale-btn" class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700/60 text-xs font-bold transition hover:bg-slate-700 hover:text-white flex items-center gap-1.5">
+                <span>🌑</span> <span id="grayscale-text">حظر الدوبامين</span>
+            </button>
+            <div class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-neon-emerald animate-pulse"></span>
+                <span class="text-xs text-slate-300 font-black font-mono tracking-wider" id="live-clock">00:00:00</span>
+                <span class="text-[10px] text-slate-500 font-bold" id="current-day-label">الأربعاء</span>
+            </div>
+            
+            <button onclick="toggleSimulator()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1">
+                <span>⚙️</span> محاكاة الوقت
+            </button>
+        </div>
+    </header>
+
+    <div id="simulator-drawer" class="hidden w-full bg-slate-900/90 border-b border-slate-800 p-4 transition-all duration-300 z-30 relative font-tajawal">
+        <div class="container mx-auto max-w-4xl flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+            <div class="text-right">
+                <p class="font-black text-neon-gold mb-1">🎮 محاكاة البيئة الزمنية:</p>
+                <p class="text-slate-400 font-tajawal">تحكم باليوم والساعة لرؤية كيف ستتغير الواجهات وتتحول تلقائياً بناءً على دستورك الشخصي.</p>
+            </div>
+            <div class="flex items-center flex-wrap gap-3">
+                <select id="sim-day-select" onchange="runSimulation()" class="bg-slate-950 border border-slate-800 text-white rounded-lg p-2 font-bold focus:outline-none">
+                    <option value="Wednesday">الأربعاء (يوم عمل أ - سنتر)</option>
+                    <option value="Thursday">الخميس (يوم عمل ب - تركيز)</option>
+                    <option value="Friday">الجمعة (يوم عمل أ - سنتر)</option>
+                    <option value="Saturday">السبت (يوم عمل ب - تركيز وتجهيز)</option>
+                    <option value="Sunday">الأحد (يوم عمل أ - سنتر)</option>
+                    <option value="Monday">الاثنين (إجازة عائلية كبرى)</option>
+                    <option value="Tuesday">الثلاثاء (إجازة تقنية وتجهيز وجبات)</option>
+                </select>
+                <input type="time" id="sim-time-input" value="05:30" onchange="runSimulation()" class="bg-slate-950 border border-slate-800 text-white rounded-lg p-2 font-mono font-bold focus:outline-none">
+                <button onclick="disableSimulation()" class="bg-neon-ruby hover:bg-neon-ruby/90 text-white font-bold px-3 py-2 rounded-lg transition">إلغاء المحاكاة</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 lg:px-8 pt-6 pb-12 z-10 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <div class="lg:col-span-4 flex flex-col gap-6">
+            
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800/80 shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xs font-black text-white flex items-center gap-1.5 font-cairo">
+                        <span>📊</span> لوحة القيادة الأسبوعية (Habit Compass)
+                    </h3>
+                    <button onclick="resetHabits()" class="text-[9px] bg-slate-950 text-neon-ruby border border-slate-800 px-2 py-0.5 rounded transition hover:bg-slate-800 font-bold">تصفير</button>
+                </div>
+                
+                <div class="flex items-center gap-4 mb-4 bg-slate-950/60 p-3 rounded-xl border border-slate-800/50">
+                    <div class="relative w-16 h-16 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="32" cy="32" r="28" class="stroke-slate-800" stroke-width="4" fill="transparent"/>
+                            <circle cx="32" cy="32" r="28" id="habit-gauge-fill" class="stroke-neon-emerald transition-all duration-500" stroke-width="4" fill="transparent" stroke-dasharray="175.9" stroke-dashoffset="175.9"/>
+                        </svg>
+                        <span id="habit-gauge-text" class="absolute text-xs font-black text-white font-mono">0%</span>
+                    </div>
+                    <div class="text-right flex-grow">
+                        <span class="text-[10px] text-slate-400 block font-tajawal">معدل انضباط اليوم الحالي</span>
+                        <h4 id="habit-gauge-status" class="text-xs font-black text-neon-emerald mt-0.5">ابدأ الفرم الآن!</h4>
+                    </div>
+                </div>
+
+                <div class="space-y-2 font-tajawal" id="day-habits-container">
+                    </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800/80 shadow-md">
+                <h3 class="text-xs font-black text-neon-cyan uppercase tracking-wider mb-2 flex items-center gap-1.5 font-cairo">
+                    <span>💧</span> بروتوكول المياه الصاروخي (3 لتر يومياً)
+                </h3>
+                <p class="text-[11px] text-slate-400 font-tajawal mb-4">كاسين مياه كبار مع كل وضوء لكل صلاة = 3 لتر مياه تلقائياً وبدون مجهود ذهني.</p>
+                
+                <div class="bg-slate-950 rounded-xl p-4 border border-slate-800/80 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="text-3xl">🥛</div>
+                        <div class="text-right font-tajawal">
+                            <div class="text-sm font-black text-white"><span id="water-count" class="font-mono text-neon-cyan">0</span> / 10 كؤوس</div>
+                            <span class="text-[9px] text-slate-500">تم شرب حوالي <span id="water-liters" class="font-mono">0</span> لتر</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <button onclick="addWater(-1)" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-white font-black text-sm flex items-center justify-center hover:bg-slate-800">-</button>
+                        <button onclick="addWater(1)" class="w-10 h-10 rounded-lg bg-neon-cyan/20 border border-neon-cyan/40 text-neon-cyan font-black text-sm flex items-center justify-center hover:bg-neon-cyan/30 active:scale-95 transition-transform">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800/80 shadow-md border-t-2 border-neon-ruby">
+                <h3 class="text-xs font-black text-neon-ruby uppercase tracking-wider mb-2 flex items-center gap-1.5 font-cairo">
+                    <span>⏱️</span> منبه الطوارئ السريع (بروتوكول حلة الرز)
+                </h3>
+                <p class="text-[11px] text-slate-400 font-tajawal mb-3">اكتب أي تنبيه طارئ بالدقائق (طفي الرز، مهمة فجائية) وسينبهك النظام بجرس إنذار فوراً.</p>
+                <div class="space-y-2">
+                    <div class="flex gap-2">
+                        <input type="text" id="quick-timer-text" placeholder="مثال: إطفاء حلة الرز 🍚" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs flex-grow focus:outline-none focus:border-neon-ruby text-white">
+                        <input type="number" id="quick-timer-mins" placeholder="دقائق" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs w-16 text-center focus:outline-none text-white font-mono font-bold">
+                        <button onclick="addQuickTimer()" class="bg-neon-ruby hover:bg-neon-ruby/90 text-white font-black px-3 rounded-xl text-xs transition shadow-neon-ruby">+</button>
+                    </div>
+                    <div id="quick-timers-container" class="space-y-1.5 max-h-[130px] overflow-y-auto">
+                        </div>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-5 border border-slate-800/80 shadow-md">
+                <h3 class="text-xs font-black text-neon-gold uppercase tracking-wider mb-3 flex items-center gap-1.5 font-cairo">
+                    <span>⚡</span> طوارئ البيت المصري السريعة
+                </h3>
+                <div class="grid grid-cols-2 gap-2 font-tajawal">
+                    <button onclick="showQuickModal('zero-day')" class="bg-slate-950 hover:bg-slate-900 border border-slate-800/80 p-2.5 rounded-xl text-right transition">
+                        <div class="text-lg mb-1">🛡️</div>
+                        <div class="text-[11px] font-black text-white">اليوم الصِفري</div>
+                        <span class="text-[9px] text-slate-500">خط الدفاع الأخير</span>
+                    </button>
+                    <button onclick="showQuickModal('power-cut')" class="bg-slate-950 hover:bg-slate-900 border border-slate-800/80 p-2.5 rounded-xl text-right transition">
+                        <div class="text-lg mb-1">🔌</div>
+                        <div class="text-[11px] font-black text-white">النور/النت قطع</div>
+                        <span class="text-[9px] text-slate-500">خطة الأوفلاين</span>
+                    </button>
+                    <button onclick="showQuickModal('guests')" class="bg-slate-950 hover:bg-slate-900 border border-slate-800/80 p-2.5 rounded-xl text-right transition">
+                        <div class="text-lg mb-1">👥</div>
+                        <div class="text-[11px] font-black text-white">ضيوف فجأة</div>
+                        <span class="text-[9px] text-slate-500">إدارة الطوارئ الأسرية</span>
+                    </button>
+                    <button onclick="showQuickModal('insomnia')" class="bg-slate-950 hover:bg-slate-900 border border-slate-800/80 p-2.5 rounded-xl text-right transition">
+                        <div class="text-lg mb-1">🛌</div>
+                        <div class="text-[11px] font-black text-white">مش عارف أنام</div>
+                        <span class="text-[9px] text-slate-500">قهر الأرق بيولوجياً</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="lg:col-span-8 flex flex-col gap-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <div class="md:col-span-3 glass-panel rounded-2xl p-4 border border-slate-800/50 opacity-60 hover:opacity-100 transition-opacity">
+                    <span class="text-[10px] text-slate-500 font-bold block mb-1">⬅️ السابق</span>
+                    <div class="text-xs font-black text-white font-mono" id="prev-task-time">04:30 - 05:00</div>
+                    <p class="text-xs text-slate-400 mt-1 font-tajawal" id="prev-task-title">الاستيقاظ وصلاة الفجر</p>
+                </div>
+
+                <div class="md:col-span-6 glass-panel rounded-2xl p-5 border border-neon-emerald/30 active-pulse-cyan relative overflow-hidden">
+                    <div class="absolute top-0 left-0 bg-neon-cyan text-slate-950 text-[9px] font-black px-3 py-1 rounded-br-xl uppercase tracking-wider font-cairo">مهمتك الحالية الآن</div>
+                    <span class="text-[10px] text-slate-400 font-bold block mb-1 mt-1 font-tajawal" id="current-task-category">التركيز والتطوير</span>
+                    <div class="text-xl font-black text-white flex items-center gap-2 font-cairo">
+                        <span id="current-task-title">بلوك المذاكرة الذهبي 🌅</span>
+                    </div>
+                    <div class="text-xs font-mono font-bold text-neon-cyan mt-1" id="current-task-time">05:00 - 07:30</div>
+                    <p class="text-xs text-slate-300 mt-2 font-tajawal leading-relaxed border-t border-slate-800/60 pt-2" id="current-task-desc">
+                        قم بتركيز كامل 100% على الكورسات الصعبة وبناء البورتفوليو في أعلى صفاء ذهني قبل استيقاظ العائلة.
+                    </p>
+                </div>
+
+                <div class="md:col-span-3 glass-panel rounded-2xl p-4 border border-slate-800/50 opacity-60 hover:opacity-100 transition-opacity">
+                    <span class="text-[10px] text-slate-500 font-bold block mb-1">➡️ اللاحق</span>
+                    <div class="text-xs font-black text-white font-mono" id="next-task-time">07:30 - 08:00</div>
+                    <p class="text-xs text-slate-400 mt-1 font-tajawal" id="next-task-title">ورد القرآن الكريم اليومي</p>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-6 border border-slate-800 shadow-xl relative" id="interactive-workspace">
+                
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800/60">
+                    <h2 class="text-md lg:text-lg font-black text-white flex items-center gap-2 font-cairo" id="workspace-title">
+                        <span class="text-neon-cyan" id="workspace-icon">🧘</span> <span id="workspace-heading">محطة التفاعل الحية</span>
+                    </h2>
+                    <span class="text-[10px] bg-slate-900 border border-slate-800 text-slate-400 px-3 py-1 rounded-full font-bold" id="workspace-badge">تزامن تلقائي</span>
+                </div>
+
+                <div class="bg-slate-950/90 border border-slate-800 p-4 rounded-2xl mb-6 border-r-4 border-neon-gold">
+                    <h3 class="text-xs font-black text-neon-gold uppercase tracking-wider mb-2 flex items-center gap-1.5 font-cairo">
+                        <span>📝</span> قائمة التكليفات والمهام الفرعية للبلوك الحالي
+                    </h3>
+                    <p class="text-[11px] text-slate-400 font-tajawal mb-3">يمكنك إضافة تفاصيل إضافية مخصصة داخل هذا البلوك الزمني (مثل: مكالمة المدير، إرسال إيميل) دون التأثير على مهام الدستور الأساسية.</p>
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" id="custom-subtask-input" placeholder="مثال: أكلم المدير الساعة 9، أبعت إيميل لفلان 9:05..." class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs flex-grow focus:outline-none focus:border-neon-gold text-white">
+                        <button onclick="addCustomSubTask()" class="bg-neon-gold hover:bg-neon-gold/90 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition">إضافة للبلوك</button>
+                    </div>
+                    <div id="custom-subtasks-list" class="space-y-2">
+                        </div>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-2xl mb-6" id="workspace-micro-steps-card">
+                    <h3 class="text-xs font-black text-neon-gold uppercase tracking-wider mb-3 flex items-center gap-1.5 font-cairo">
+                        <span>📋</span> خطوات التنفيذ الميكانيكي الدقيقة (خطوة بخطوة)
+                    </h3>
+                    <div class="space-y-2" id="workspace-micro-steps">
+                        </div>
+                </div>
+
+                <div id="widget-study" class="hidden space-y-4">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-950/80 p-4 rounded-2xl border border-slate-800 font-tajawal">
+                        <div class="text-right">
+                            <span class="text-[10px] text-slate-500 font-bold block">دورة الإنتاجية اليمانية للمخ (Ultradian Rhythms)</span>
+                            <h4 id="study-phase-title" class="text-xs font-black text-white mt-1">سبرينت التركيز الأول (50 دقيقة)</h4>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
+                            <button onclick="setStudyPhase(0)" class="px-2.5 py-1 text-[9px] font-black rounded-lg text-slate-400 hover:text-white transition" id="sbtn-0">تركيز 1</button>
+                            <button onclick="setStudyPhase(1)" class="px-2.5 py-1 text-[9px] font-black rounded-lg text-slate-400 hover:text-white transition" id="sbtn-1">راحة 1</button>
+                            <button onclick="setStudyPhase(2)" class="px-2.5 py-1 text-[9px] font-black rounded-lg text-slate-400 hover:text-white transition" id="sbtn-2">تركيز 2</button>
+                            <button onclick="setStudyPhase(3)" class="px-2.5 py-1 text-[9px] font-black rounded-lg text-slate-400 hover:text-white transition" id="sbtn-3">راحة 2</button>
+                            <button onclick="setStudyPhase(4)" class="px-2.5 py-1 text-[9px] font-black rounded-lg text-slate-400 hover:text-white transition" id="sbtn-4">تقفيل</button>
+                        </div>
+                    </div>
+
+                    <div class="py-8 bg-slate-950/40 rounded-2xl border border-slate-800/50 flex flex-col items-center justify-center">
+                        <div class="text-6xl font-mono font-black text-white tracking-widest mb-4" id="study-countdown">50:00</div>
+                        
+                        <div class="flex gap-3">
+                            <button onclick="toggleStudyTimer()" id="study-control-btn" class="bg-neon-emerald text-slate-950 font-black px-6 py-2 rounded-xl text-xs transition transform hover:scale-[1.03] shadow-neon-emerald">بدء التركيز الذهني</button>
+                            <button onclick="resetStudyTimer()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs transition">إعادة ضبط</button>
+                            <button onclick="triggerLazyAdvice()" class="bg-neon-ruby/15 text-neon-ruby border border-neon-ruby/30 hover:bg-neon-ruby/25 font-black px-4 py-2 rounded-xl text-xs transition flex items-center gap-1.5 animate-pulse">
+                                <span>🥱</span> حاسس بملل؟
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="widget-workout" class="hidden space-y-4">
+                    <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 font-tajawal">
+                        <div class="text-right">
+                            <span class="text-[10px] text-slate-500 font-bold block" id="workout-day-badge">تمرين الأربعاء</span>
+                            <h4 class="text-xs font-black text-white mt-1" id="workout-theme-title">القوة الانفجارية للجزء العلوي</h4>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="workout-status" class="bg-neon-emerald/15 text-neon-emerald text-[9px] font-black px-2.5 py-1 rounded-lg border border-neon-emerald/20">جاهز للقتال</span>
+                            <span id="workout-overall-progress" class="bg-slate-900 text-white text-[9px] font-black px-2.5 py-1 rounded-lg border border-slate-800">تمرين 1 / 4</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+                        <div class="md:col-span-5 bg-slate-950/50 rounded-2xl border border-slate-800 p-4 space-y-2 max-h-[350px] overflow-y-auto" id="workout-exercises-list">
+                            </div>
+
+                        <div class="md:col-span-7 bg-slate-950/80 rounded-2xl border border-slate-800 p-5 flex flex-col justify-between relative overflow-hidden">
+                            <div class="absolute top-0 left-0 bg-slate-900 text-slate-500 text-[8px] font-mono p-1 uppercase">REP-BY-SET TRACKER</div>
+                            
+                            <div class="my-auto py-2">
+                                <h4 class="text-xs font-black text-neon-gold uppercase tracking-wider" id="player-exc-index">التمرينة الحالية</h4>
+                                <h3 class="text-base font-black text-white mt-1.5" id="player-exc-name">DB Floor Press (بنش على الأرض)</h3>
+                                <p class="text-[11px] text-slate-400 mt-2 font-tajawal leading-relaxed" id="player-exc-desc">
+                                    أوزان الدمبلز المتوفرة: 15 كجم. اضغط بقوة انفجارية من الأرض وتحكم في الهبوط.
+                                </p>
+
+                                <div class="mt-4 space-y-2" id="exercise-sets-tracker">
+                                    </div>
+                            </div>
+
+                            <div class="bg-slate-950 rounded-xl p-3 border border-slate-900 flex flex-col items-center">
+                                <span class="text-[9px] text-slate-500 block mb-1">مؤقت الاستشفاء البيني والراحات</span>
+                                <div class="text-3xl font-mono font-black text-neon-cyan tracking-wider mb-2" id="player-timer">00:00</div>
+                                <div class="flex gap-2">
+                                    <button onclick="startRestTimer()" id="workout-rest-btn" class="bg-neon-cyan text-slate-950 font-black px-4 py-1.5 rounded-lg text-[10px] transition">تفعيل مؤقت الراحة</button>
+                                    <button onclick="skipExercise()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-1.5 rounded-lg text-[10px] transition">التمرينة التالية ➡️</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="widget-meal" class="hidden space-y-4">
+                    <div class="bg-neon-gold/10 border border-neon-gold/30 rounded-2xl p-5 flex flex-col md:flex-row justify-between items-center gap-6 font-tajawal">
+                        <div class="text-right max-w-xl">
+                            <span class="bg-neon-gold text-slate-950 text-[9px] font-black px-2.5 py-0.5 rounded font-mono uppercase tracking-wider mb-2 inline-block">حصة الطاقة المطلوبة الآن</span>
+                            <h3 class="text-base font-black text-white mb-2" id="meal-widget-title">الفطار السحري (10:30 صباحاً)</h3>
+                            <p class="text-xs text-slate-300 font-tajawal leading-relaxed" id="meal-widget-desc">
+                                4 لـ 5 معالق فول بالكمون والليمون ونقطة زيت زيتون + بيضتين مسلوقين + رغيف عيش بلدي أسمر بالردة + خيارة وطماطم.
+                            </p>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center min-w-[150px]">
+                            <span class="text-[9px] text-slate-500 block mb-1">تأثير الوجبة عصبياً</span>
+                            <div class="text-xs font-black text-neon-emerald" id="meal-widget-impact">تثبيت تركيز خلايا المخ</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="widget-standby" class="block py-10 text-center font-tajawal">
+                    <div class="text-5xl mb-4 animate-bounce">⚡</div>
+                    <h3 class="text-base font-black text-white">النظام يعمل بصمت في الخلفية</h3>
+                    <p class="text-xs text-slate-400 mt-2 max-w-md mx-auto leading-relaxed">
+                        أنت الآن ملتزم بالدستور. لا توجد تفاعلات مخصصة مطلوبة في هذه الفترة الزمنية. ركز على تارجتك وصفي ذهنك تماماً.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="glass-panel rounded-2xl border border-slate-800/80 shadow-md">
+                <button onclick="toggleConstitutionDocs()" class="w-full p-4 flex items-center justify-between text-xs font-black text-slate-300 hover:text-white transition font-cairo">
+                    <span class="flex items-center gap-1.5">📖 أرشيف الدستور الكامل للرجوع السريع (النسخة الكاملة)</span>
+                    <span id="doc-toggle-icon">➕ تفاصيل</span>
+                </button>
+                <div id="constitution-docs-content" class="hidden border-t border-slate-800/80 p-5 space-y-6 max-h-[500px] overflow-y-auto text-xs text-slate-400 leading-relaxed font-tajawal">
+                    
+                    <div>
+                        <h4 class="text-white font-black mb-2 text-sm border-r-2 border-neon-emerald pr-2">1. آليات علم النفس السلوكي للتخلص من العادات السيئة</h4>
+                        <p class="mb-2"><strong>تكتيك "عهد أوليس" للموبايل واللاب:</strong> نزل تطبيق Opal أو AppBlock، وخلي زوجتك تكتب كلمة سر الحجب من وراك وتغيرها كل أسبوع. امسح اختصارات الألعاب تماماً واقفل شاحن اللاب بشنطة مقفولة وحطها فوق الدولاب.</p>
+                        <p class="mb-2"><strong>تصفير الطوب الأحمر (Silent Badges):</strong> اقفل Notification Badges لكل تطبيقات التشتيت لتقليل الرغبة القهرية لفتح التطبيقات بنسبة 50%.</p>
+                        <p class="mb-2"><strong>المطبات الرقمية (Screen Intentions):</strong> غيّر خلفية القفل واكتب بخط عريض: "أنت فاتح الموبايل ليه دلوقتي؟ كورس؟ قرآن؟ شغل؟".</p>
+                        <p class="mb-2"><strong>كسر رهبة الكورسات (Paper-First Principle):</strong> قبل بدء الدرس، اكتب عنوان الفيديو والأهداف يدوياً على ورقة بيضاء، ولما تخلص اشطب عليها بالماركر لشحنة الدوبامين النظيفة.</p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-white font-black mb-2 text-sm border-r-2 border-neon-purple pr-2">2. حزمة عادات النجاح وتطوير الذات</h4>
+                        <p class="mb-2"><strong>ورد القرآن الكريم (المصحف الصوتي والسنن):</strong> حفظ نصف صفحة بعد الفجر. تشغيل التسميع والشيخ المفضل بصوت خافت بالخلفية بين المغرب والعشاء لتسهيل الحفظ. أداء السنن بركعتين بالورد الجديد كأقوى مثبت بالذاكرة طويلة المدى.</p>
+                        <p class="mb-2"><strong>Shadowing الإنجليزية المهنية:</strong> 30 دقيقة لمشاهدة فيديو قصير لخبير يتحدث بمجال تخصصك بالإنجليزية، أوقف المقطع كرر بنفس النبرة والنطق لدمج مصطلحات سوق العمل (Jargon) واقتلاع رهبة المقابلات.</p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-white font-black mb-2 text-sm border-r-2 border-neon-gold pr-2">3. ماكينة الـ Personal Branding والـ CV الحي</h4>
+                        <p class="mb-2"><strong>إستراتيجية "التعلم على العلن":</strong> اكتب سطرين عما تعلمته بفجر المذاكرة وانشره كبوست على LinkedIn الساعة 12:00 ظهراً وسط العمل لتظهر قدام Recruiters كشخص شغوف مواكب للسوق.</p>
+                        <p class="mb-2"><strong>بورتفوليو تراكمي (Micro-Portfolio):</strong> قسم البورتفوليو لمشاريع دقيقة (Micro-Projects) وارفعها يومي الأربعاء والأحد من 12 لـ 1 ظهراً على GitHub/Behance.</p>
+                        <p class="mb-2"><strong>الـ CV الحي (The Living CV):</strong> سيبه مفتوح دايماً بصفحة Docs. سجّل فيه إنجازاتك بالأرقام ونسب المئوية أولاً بأول.</p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-white font-black mb-2 text-sm border-r-2 border-neon-cyan pr-2">4. إدارة الطاقة ومكافحة الأرق</h4>
+                        <p class="mb-2"><strong>هندسة الكافيين ومزامنة القهوة:</strong> شرب النسكافيه الأول 6:30 ص بعد ساعتين من الاستيقاظ لحماية هرمون الكورتيزول الطبيعي، والنسكافيه الثاني 2:30 بعد القيلولة وقبل التمرين.</p>
+                        <p class="mb-2"><strong>طقس الإغلاق الإدراكي (Cognitive Shutdown):</strong> الساعة 17:00 اكتب 3 مهام لبكرة، اغلق تابات الشغل، اقفل شاشة اللاب توب، وقل بصوت مسموع: "شغل النهاردة انتهى بنجاح.. دلوقتي أنا الأب والزوج".</p>
+                        <p class="mb-2"><strong>قاعدة 3-2-1 لجودة النوم:</strong> 3 ساعات قبل النوم منع الأكل الثقيل (19:30). ساعتين قبل النوم إيقاف المذاكرة والعمل للتهدئة (20:30). ساعة قبل النوم تقفيل الشاشات الزرقاء بالكامل (21:30).</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="custom-modal" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex items-center justify-center p-4">
+        <div class="glass-panel border-t-4 border-neon-ruby rounded-3xl p-6 max-w-md w-full relative shadow-neon-emerald">
+            <div class="text-center font-tajawal">
+                <div class="text-4xl mb-3" id="modal-icon">🥋</div>
+                <h3 class="text-base font-black text-white" id="modal-title">الجولة الحاسمة!</h3>
+                <p class="text-xs text-slate-300 mt-3 leading-relaxed" id="modal-body">
+                    ابنك واقف بيراقبك برة وبيعتبرك السوبر هيرو بتاعه وبيردد تصرفاتك. هتعلمه إيه؟ إن البطل بيقفل لما يتعب ولا إن البطل بيكمل تمرين ومذاكرة حتى وهو ملوش مزاج؟ ابلع ريقك وقوم صفي دماغك!
+                </p>
+                <button onclick="closeCustomModal()" class="mt-6 w-full bg-neon-ruby hover:bg-neon-ruby/90 text-white font-black py-2 rounded-xl text-xs transition duration-200">فهمت الرسالة.. هرجع للفرم فوراً! 🥊</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-auto py-8 border-t border-slate-900 bg-slate-950 text-center text-xs text-slate-500 relative z-10 font-tajawal">
+        <div class="container mx-auto px-4">
+            <p class="mb-2 font-mono text-[10px]">THE WARRIOR'S DYNAMIC MATRIX BLUEPRINT • EST. 2026</p>
+            <p class="font-bold text-slate-400">"الانضباط هو اللي بيشيلك لما الشغف بيموت."</p>
+        </div>
+    </footer>
+
+    <script>
+        const days = ["الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد", "الاثنين", "الثلاثاء"];
+        const habits = ["dawn_course", "quran", "work_target", "workout", "wife_alignment", "sleep_time"];
+        
+        let simModeActive = false;
+        let simDay = "Wednesday";
+        let simTime = "05:30";
+        let isGrayscaleMode = false;
+        
+        let waterCount = 0;
+        let habitsCompleted = {};
+        let activeMicroChecklistState = {};
+        let customSubTasks = {}; 
+        let quickTimers = [];
+
+        // Audio Synthesis Whistle & Beep (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playChime(frequency = 587.33, duration = 0.3, type = 'triangle') {
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = type;
+                osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("AudioContext blocked or error:", e);
+            }
+        }
+
+        // Grayscale mode
+        function toggleGrayscaleMode() {
+            const body = document.body;
+            const btn = document.getElementById('grayscale-btn');
+            const txt = document.getElementById('grayscale-text');
+            if (isGrayscaleMode) {
+                body.classList.remove('grayscale-mode');
+                txt.textContent = "حظر الدوبامين";
+                btn.className = "bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700/60 text-xs font-bold transition hover:bg-slate-700 hover:text-white flex items-center gap-1.5";
+                isGrayscaleMode = false;
+            } else {
+                body.classList.add('grayscale-mode');
+                txt.textContent = "إلغاء الفلتر";
+                btn.className = "bg-neon-ruby text-white px-3 py-1.5 rounded-xl border border-neon-ruby/30 text-xs font-bold transition flex items-center gap-1.5";
+                isGrayscaleMode = true;
+                playChime(330, 0.4);
+            }
+        }
+
+        // Clock Update
+        function updateClock() {
+            const clockEl = document.getElementById('live-clock');
+            if (clockEl) {
+                const now = new Date();
+                clockEl.textContent = now.toLocaleTimeString('ar-EG');
+            }
+        }
+
+        // 100% Comprehensive Daily Activity Micro-Steps
+        const taskMicroSteps = {
+            "00:00-04:30": [
+                "اتأكد إن الشاشات مقفولة وموبيلك أبيض وأسود.",
+                "شيل شاحن اللاب توب واقفل الشنطة وارميها فوق الدولاب.",
+                "اضبط المنبه على 4:30 ص وابعد الموبايل عن السرير بمسافة تخليك تقوم تقف."
+            ],
+            "04:30-05:00": [
+                "المنبه ضرب؟ طبق قاعدة الـ 5 ثواني فوراً (5, 4, 3, 2, 1) واقفز من السرير.",
+                "اتجه مباشرة للحمام واغسل وشك بمياه ساقعة (صدمة حرارية).",
+                "اشرب كاس مياه دافية عليه نقطتين ليمون لتطهير كبدك وأمعائك.",
+                "اتوضأ بهدوء، والبس وانزل صلي الفجر جماعة بخشوع تام في المسجد."
+            ],
+            "05:00-07:30": [
+                "هات ورقة بيضاء وقلم جاف واكتب الهدف بيدك: 'النهاردة هفهم نقطة كذا'.",
+                "رش معطر النعناع أو الليمون في الغرفة (مرساة الحواس العصبية).",
+                "ابدأ سبرينت التركيز الأول (50 دقيقة) دون لمس موبايل أو تشتيت.",
+                "خد راحة 10 دقائق (قوم من على الكرسي، امدد ضهرك، اشرب مياه).",
+                "ابدأ سبرينت التركيز الثاني (50 دقيقة) لحسم الجزء المعقد بالدرس.",
+                "خد راحة ثانية 10 دقائق لتنفس هادئ.",
+                "ادخل في طور التقفيل والتثبيت (30 دقيقة) واشطب على أهدافك بالماركر الأخضر."
+            ],
+            "07:30-08:00": [
+                "افتح مصحف ورق مش الشاشة لتفادي التشتيت.",
+                "شغل الاستماع التمهيدي للشيخ المفضل بصوت منخفض في الخلفية.",
+                "ابدأ قراءة صفحة الحفظ الجديدة بتمعن تام وتكرار لآياتها 5 مرات مسموعة.",
+                "أدِ ركعتي سنة الفجر بالورد الجديد كأقوى مثبت بالذاكرة طويلة المدى."
+            ],
+            "08:00-10:00": [
+                "افتح جهاز الشغل على Desktop 1 المخصص للوظيفة حصراً.",
+                "راجع الإيميلات المعلقة والطلبات العاجلة بذكاء وهدوء.",
+                "أنهِ مهام العمل الأساسية ذات الثقل العالي قبل استيقاظ العائلة."
+            ],
+            "10:00-10:30": [
+                "اقفل اللاب توب فيزيائياً وقول لنفسك: 'دلوقتي أنا الأب والزوج'.",
+                "حضّر فطور الفول المدمس بالزيت الحار أو الجبنة القريش مع البيض المسلوق.",
+                "اجلس مع الزوجة والابن وتبادل الضحك لشحن طاقتك العاطفية."
+            ],
+            "10:30-13:00": [
+                "تابع أعمال الوظيفة والرد على الإيميلات بذكاء وسرعة.",
+                "الساعة 11:00 ص: حضّر كوب شاي أخضر بالنعناع الساخن لخفض التوتر القلقي.",
+                "الساعة 12:00 ظهراً: اضبط تايمر 20 دقيقة، ارفع بوست الـ LinkedIn، وتفاعل مع صناع القرار، واقفل فوراً.",
+                "عند سماع أذان الظهر: اتوضأ واشرب كأسي مياه كبار وصلي بخشوع كامل."
+            ],
+            "13:00-14:00": [
+                "إغلاق إضاءة الغرفة تماماً وتأمين الهدوء لـ 45 دقيقة.",
+                "استرخِ في نوم عميق لتصفير وتحفيز جهازك العصبي المركزي.",
+                "اصحى بهدوء واشرب كاس مياه كامل لتعويض رطوبة خلاياك."
+            ],
+            "14:00-17:00": [
+                "تابع الشغل الفعلي وخلص تارجت مهامك اليومية.",
+                "الساعة 14:30: حضّر كوب النسكافيه بلاك الثاني لزيادة طاقة ما بعد القيلولة.",
+                "الساعة 15:30: خصص 30 دقيقة لـ Shadowing الإنجليزي المهني (اسمع مقطع بالإنجليزية وكرره بصوت عالي).",
+                "عند سماع أذان العصر: اتوضأ واشرب كأسي مياه، وصلي العصر، وتناول السناك الدوباميني (3 تمرات ومشتملات السوداني)."
+            ],
+            "17:00-18:30": [
+                "تطبيق طقس الإغلاق الإدراكي: اكتب مهام بكرة، اقفل اللاب فيزيائياً وودع الموظف.",
+                "في أيام أ (الأربعاء/الجمعة/الأحد): غيّر ملابسك وانزل فوراً مع المدام لإنهاء طلبات البيت وتغيير مود.",
+                "في أيام ب (الخميس/السبت): افتح Desktop 2 للتطوير الشخصي وبناء البورتفوليو بروقان."
+            ],
+            "18:30-19:30": [
+                "تجهيز الدمبلز وأوزانك الفولاذية بالصالة وتفعيل مؤقت التدريب.",
+                "نفّذ تمرين اليوم الحالي المجدول بالعدة والـ Rep-by-Set بالتفصيل.",
+                "أشرك ابنك بالتمرين (وزن إضافي أو مشجع) واجعل تمرينك متعة عائلية.",
+                "فور الانتهاء: اتجه للدوش الدافئ لتنشيط العضلات وتصفير التعب."
+            ],
+            "19:30-21:30": [
+                "تناول العشاء الخفيف المصلح للأنسجة (تونة مصفاة أو بيض وقريش مع سلطة خضراء).",
+                "عند أذان المغرب والعشاء: اشرب كأسي مياه بكل وضوء وأدِ الصلوات بخشوع.",
+                "اجلس مع الزوجة لـ 10 دقائق عاطفية على انفراد دون التحدث في المشاكل أو الفواتير.",
+                "الساعة 21:15: رش رائحة اللافندر أو الفانيليا لتهيئة المخ لإفراز الميلاتونين."
+            ],
+            "21:30-22:30": [
+                "افتح طور اللعب (الجيمنج/الترفيه) بضمير مستريح وبدون ذنب.",
+                "الساعة 22:20: سلم الهاتف لزوجتك (عهد أوليس) لغلقه وتثبيت قفل الدوبامين.",
+                "ادخل السرير في هدوء تام وطبق التنفس الصندوقي 4 دورات كاملة لتنام في ثوانٍ."
+            ],
+            "22:30-24:00": [
+                "الخلود التام للنوم العميق الهادئ.",
+                "المخ يعيد بناء وتنسيق الذاكرة وإصلاح ألياف العضلات.",
+                "حماية طاقة بكرة تكتمل بانضباط نومك الليلة."
+            ]
+        };
+
+        // 100% Granular Gym & MMA Exercises Plan
+        const shamilWorkoutPlan = {
+            "Wednesday": [
+                { name: "DB Floor Press (بنش على الأرض)", sets: [
+                    { reps: "10 عدات", weight: "15 كجم", rest: 60, done: false },
+                    { reps: "10 عدات", weight: "15 كجم", rest: 60, done: false },
+                    { reps: "10 عدات", weight: "15 كجم", rest: 60, done: false },
+                    { reps: "10 عدات", weight: "15 كجم", rest: 60, done: false }
+                ], desc: "استلق على الأرض، ادفع الأوزان بقوة للأعلى ببطء وتفادى التذبذب لراحة مفاصل الأكتاف." },
+                { name: "DB Gorilla Rows (سحب ظهر بالتبادل)", sets: [
+                    { reps: "12 عدة لكل يد", weight: "15 كجم", rest: 60, done: false },
+                    { reps: "12 عدة لكل يد", weight: "15 كجم", rest: 60, done: false },
+                    { reps: "12 عدة لكل يد", weight: "15 كجم", rest: 60, done: false },
+                    { reps: "12 عدة لكل يد", weight: "15 كجم", rest: 60, done: false }
+                ], desc: "انحنِ لأسفل، حافظ على استقامة عمودك الفقري، واسحب الدمبل باتجاه بطنك وقفل لوح الكتف." },
+                { name: "DB Clean and Press (كتف وانفجارية)", sets: [
+                    { reps: "8 عدات", weight: "10 كجم", rest: 45, done: false },
+                    { reps: "8 عدات", weight: "10 كجم", rest: 45, done: false },
+                    { reps: "8 عدات", weight: "10 كجم", rest: 45, done: false }
+                ], desc: "اسحب الدمبل من الأرض بحركة سريعة للأكتاف ثم ادفع للأعلى بأقصى قوة تماسك حركي." },
+                { name: "Shadow Boxing (ملاكمة ظل)", sets: [
+                    { reps: "الجولة 1 (3 د)", weight: "وزن الجسم", rest: 60, done: false },
+                    { reps: "الجولة 2 (3 د)", weight: "وزن الجسم", rest: 60, done: false },
+                    { reps: "الجولة 3 (3 د)", weight: "وزن الجسم", rest: 60, done: false }
+                ], desc: "التركيز على دمج اللكمات السريعة (Jab - Cross - Hook) مع تحركات الرجلين وحركة الرأس السريعة." }
+            ],
+            "Thursday": [
+                { name: "Sprawls (الدخول والدفاع ضد المصارعة)", sets: [
+                    { reps: "12 عدة", weight: "وزن الجسم", rest: 45, done: false },
+                    { reps: "12 عدة", weight: "وزن الجسم", rest: 45, done: false },
+                    { reps: "12 عدة", weight: "وزن الجسم", rest: 45, done: false }
+                ], desc: "انزل على الأرض بسرعة مفرودة كدفاع ضد خطف الأرجل، واقفز للأعلى بأقصى طاقة انفجارية." },
+                { name: "Shadow Striking with Kicks", sets: [
+                    { reps: "الجولة 1 (3 د)", weight: "وزن الجسم", rest: 60, done: false },
+                    { reps: "الجولة 2 (3 د)", weight: "وزن الجسم", rest: 60, done: false }
+                ], desc: "دمج اللكمات السريعة مع ركلات دقيقة منخفضة ومتوسطة (Low and Middle Kicks)." },
+                { name: "Dumbbell Punches (تحمل كتف)", sets: [
+                    { reps: "45 ثانية مستمرة", weight: "دمبلز 10 كجم", rest: 45, done: false },
+                    { reps: "45 ثانية مستمرة", weight: "دمبلز 10 كجم", rest: 45, done: false },
+                    { reps: "45 ثانية مستمرة", weight: "دمبلز 10 كجم", rest: 45, done: false }
+                ], desc: "سدد لكمات متواصلة سريعة جداً أمام الوجه لزيادة القدرة اللاهوائية لعضلات الكتف." },
+                { name: "Bicycle Crunches (عضلات البطن)", sets: [
+                    { reps: "20 عدة", weight: "وزن الجسم", rest: 30, done: false },
+                    { reps: "20 عدة", weight: "وزن الجسم", rest: 30, done: false },
+                    { reps: "20 عدة", weight: "وزن الجسم", rest: 30, done: false },
+                    { reps: "20 عدة", weight: "وزن الجسم", rest: 30, done: false }
+                ], desc: "استلق مفروداً، المس كوعك اليمين بركبتك اليسار بالتبادل لشد جدار الكور." },
+                { name: "Plank (بلانك ثبات)", sets: [
+                    { reps: "60 ثانية ثبات", weight: "وزن الجسم", rest: 30, done: false },
+                    { reps: "60 ثانية ثبات", weight: "وزن الجسم", rest: 30, done: false }
+                ], desc: "ثبات كامل على السواعد مع شد البطن والمؤخرة على خط مستقيم واحد." }
+            ],
+            "Friday": [
+                { name: "DB Goblet Squats (رجلين أمامية)", sets: [
+                    { reps: "12 عدة", weight: "دمبلز 15 كجم", rest: 60, done: false },
+                    { reps: "12 عدة", weight: "دمبلز 15 كجم", rest: 60, done: false },
+                    { reps: "12 عدة", weight: "دمبلز 15 كجم", rest: 60, done: false },
+                    { reps: "12 عدة", weight: "دمبلز 15 كجم", rest: 60, done: false }
+                ], desc: "امسك الدمبل بشكل رأسي تحت ذقنك، انزل في سكوات كامل واضغط بكعب رجلك للأعلى." },
+                { name: "DB Romanian Deadlifts (خلفيات وقوة ظهر)", sets: [
+                    { reps: "10 عدات", weight: "دمبلز 15 كجم", rest: 60, done: false },
+                    { reps: "10 عدات", weight: "دمبلز 15 كجم", rest: 60, done: false },
+                    { reps: "10 عدات", weight: "دمبلز 15 كجم", rest: 60, done: false },
+                    { reps: "10 عدات", weight: "دمبلز 15 كجم", rest: 60, done: false }
+                ], desc: "انزل بدمبلز بجوار الفخذ مع دفع مؤخرتك للخلف، حافظ على استقامة الظهر كاملة لشد الخلفيات." },
+                { name: "DB Walking Lunges (طعن متحرك)", sets: [
+                    { reps: "12 خطوة بالتبادل", weight: "دمبلز 10 كجم", rest: 45, done: false },
+                    { reps: "12 خطوة بالتبادل", weight: "دمبلز 10 كجم", rest: 45, done: false },
+                    { reps: "12 خطوة بالتبادل", weight: "دمبلز 10 كجم", rest: 45, done: false }
+                ], desc: "خطوة واسعة للأمام وانزل بركبتك الخلفية حتى تلمس الأرض لرفع ثبات وقوة الانطلاق." },
+                { name: "Footwork & Level Changes", sets: [
+                    { reps: "جولة 1 (2 د)", weight: "وزن الجسم", rest: 45, done: false },
+                    { reps: "جولة 2 (2 د)", weight: "وزن الجسم", rest: 45, done: false },
+                    { reps: "جولة 3 (2 د)", weight: "وزن الجسم", rest: 45, done: false },
+                    { reps: "جولة 4 (2 د)", weight: "وزن الجسم", rest: 45, done: false }
+                ], desc: "تحرك حركي سريع بوقفة الملاكم مع نزول مفاجئ للأسفل لتخيل الانقضاض لخطف ركبة الخصم." }
+            ],
+            "Saturday": [
+                { name: "الجولة 1: ملاكمة فقط", sets: [{ reps: "3 دقائق كاملة", weight: "وزن الجسم", rest: 60, done: false }], desc: "تحرك حاد، لكمات سريعة، تفادي دفاعي وتغيير زوايا." },
+                { name: "الجولة 2: ركلات وركبيات فقط", sets: [{ reps: "3 دقائق كاملة", weight: "وزن الجسم", rest: 60, done: false }], desc: "تخيل الخصم، ركلات من زوايا ميتة، مع دمج ركبيات الكلينش القريب." },
+                { name: "الجولة 3: ميكس لكمات وركلات", sets: [{ reps: "3 دقائق كاملة", weight: "وزن الجسم", rest: 60, done: false }], desc: "دمج كامل لكافة اللكمات والركلات بكومبوهات قتالية قاسية ومستمرة." },
+                { name: "الجولة 4: هجوم ودفاع Sprawls", sets: [{ reps: "3 دقائق كاملة", weight: "وزن الجسم", rest: 60, done: false }], desc: "هاجم بـ 4 لكمات ثم انزل للأرض فوراً للدفاع ضد المصارعة وكرر." },
+                { name: "الجولة 5: بطن وكور مكثف", sets: [{ reps: "3 دقائق كاملة", weight: "وزن الجسم", rest: 0, done: false }], desc: "تمارين Leg raises و Russian twists متواصلة للوصول للفشل العضلي النهائي." }
+            ],
+            "Sunday": [
+                { name: "DB Thrusters (قوة انفجارية كاملة)", sets: [
+                    { reps: "10 عدات", weight: "دمبلز 10 كجم", rest: 60, done: false },
+                    { reps: "10 عدات", weight: "دمبلز 10 كجم", rest: 60, done: false },
+                    { reps: "10 عدات", weight: "دمبلز 10 كجم", rest: 60, done: false }
+                ], desc: "انزل في سكوات كامل ثم ادفع الدمبلز للأعلى بقوة أكتافك في حركة واحدة متصلة." },
+                { name: "DB Hammer Curls to Arnold Press", sets: [
+                    { reps: "10 عدات", weight: "دمبلز 10 كجم", rest: 60, done: false },
+                    { reps: "10 عدات", weight: "دمبلز 10 كجم", rest: 60, done: false },
+                    { reps: "10 عدات", weight: "دمبلز 10 كجم", rest: 60, done: false }
+                ], desc: "تمرينة بايسبس هامر ثم التفاف للأكتاف واضغط الدمبلز للأعلى لبناء حركي متكامل." },
+                { name: "Push-ups (ضغط بلدي كلاسيكي)", sets: [
+                    { reps: "لأقصى تكرار (فشل عضلات)", weight: "وزن الجسم", rest: 60, done: false },
+                    { reps: "لأقصى تكرار (فشل عضلات)", weight: "وزن الجسم", rest: 60, done: false },
+                    { reps: "لأقصى تكرار (فشل عضلات)", weight: "وزن الجسم", rest: 60, done: false }
+                ], desc: "تنزيل هادئ بكامل الجسم للأرض والصعود بقوة الصدر والترايسبس." }
+            ],
+            "Monday": [
+                { name: "Full-Body Static Stretching (إطالات ثابتة)", sets: [{ reps: "15 دقيقة كاملة", weight: "المرونة والراحة", rest: 0, done: false }], desc: "إطالات هادئة لعضلات الصدر، الأكتاف، والرقبة لتسريع تصريف الفضلات العضلية." },
+                { name: "Yoga for Back & Hips", sets: [{ reps: "15 دقيقة كاملة", weight: "المرونة والراحة", rest: 0, done: false }], desc: "أوضاع Cobra Pose و Child's Pose لتمديد وفك توتر العمود الفقري." },
+                { name: "Hip Openers & Joint Mobility", sets: [{ reps: "15 دقيقة كاملة", weight: "المرونة والراحة", rest: 0, done: false }], desc: "فتح مفاصل الحوض لراحة تامة للجهاز العصبي." }
+            ],
+            "Tuesday": [
+                { name: "Core & Abdominals (Planks & Dead bug)", sets: [
+                    { reps: "45 ثانية بلانك جانبي", weight: "وزن الجسم", rest: 30, done: false },
+                    { reps: "45 ثانية بلانك كلاسيكي", weight: "وزن الجسم", rest: 30, done: false },
+                    { reps: "12 عدة Dead bug ببطء", weight: "وزن الجسم", rest: 30, done: false }
+                ], desc: "تقوية عضلات البطن العميقة لحماية الظهر والفقرات ومنع الإصابات." },
+                { name: "Grip and Forearm Exercises", sets: [
+                    { reps: "15 عدة بالدمبلز", weight: "دمبلز 10 كجم", rest: 30, done: false },
+                    { reps: "15 عدة بالدمبلز", weight: "دمبلز 10 كجم", rest: 30, done: false },
+                    { reps: "15 عدة بالدمبلز", weight: "دمبلز 10 كجم", rest: 30, done: false }
+                ], desc: "مرجحة المعصم وتقوية قبضة السحب." },
+                { name: "Neck Strengthening (تمارين الرقبة)", sets: [
+                    { reps: "15 عدة مقاومة ذاتية باليد", weight: "مقاومة يدوية", rest: 30, done: false },
+                    { reps: "15 عدة مقاومة ذاتية باليد", weight: "مقاومة يدوية", rest: 30, done: false },
+                    { reps: "15 عدة مقاومة ذاتية باليد", weight: "مقاومة يدوية", rest: 30, done: false }
+                ], desc: "تقوية عضلات الرقبة الأربعة باتجاه الجوانب كوقاية عسكرية لمقاتلي MMA." },
+                { name: "Slow-Motion Shadow Boxing", sets: [{ reps: "3 جولات × 3 دقائق", weight: "تحكم وبطء", rest: 30, done: false }], desc: "ملاكمة ظل بطيئة للغاية للتركيز الكلي على دقة الوقفة وتفادي اللكمات." }
+            ]
+        };
+
+        // Get custom Week ID starting on Wednesday to handle reset
+        function getWarriorWeekID() {
+            const d = new Date();
+            const day = d.getDay(); 
+            const diff = (day >= 3) ? (day - 3) : (day + 4); 
+            const wedDate = new Date(d);
+            wedDate.setDate(d.getDate() - diff);
+            return wedDate.toISOString().substring(0, 10); 
+        }
+
+        // Persistent State Handling
+        function loadPersistence() {
+            const weekID = getWarriorWeekID();
+            const storedWeek = localStorage.getItem('warrior_week_current');
+            
+            if (storedWeek !== weekID) {
+                localStorage.setItem('warrior_week_current', weekID);
+                waterCount = 0;
+                habitsCompleted = {};
+                activeMicroChecklistState = {};
+                customSubTasks = {};
+                quickTimers = [];
+                savePersistence();
+            } else {
+                const storedHabits = localStorage.getItem('warrior_habits');
+                const storedWater = localStorage.getItem('warrior_water');
+                const storedSteps = localStorage.getItem('warrior_micro_steps');
+                const storedSubTasks = localStorage.getItem('warrior_custom_subtasks');
+                const storedTimers = localStorage.getItem('warrior_quick_timers');
+                
+                if (storedHabits) habitsCompleted = JSON.parse(storedHabits);
+                if (storedWater) waterCount = parseInt(storedWater) || 0;
+                if (storedSteps) activeMicroChecklistState = JSON.parse(storedSteps);
+                if (storedSubTasks) customSubTasks = JSON.parse(storedSubTasks);
+                if (storedTimers) quickTimers = JSON.parse(storedTimers);
+            }
+            
+            document.getElementById('water-count').textContent = waterCount;
+            document.getElementById('water-liters').textContent = (waterCount * 0.3).toFixed(1);
+            renderQuickTimers();
+        }
+
+        function savePersistence() {
+            localStorage.setItem('warrior_habits', JSON.stringify(habitsCompleted));
+            localStorage.setItem('warrior_water', waterCount.toString());
+            localStorage.setItem('warrior_micro_steps', JSON.stringify(activeMicroChecklistState));
+            localStorage.setItem('warrior_custom_subtasks', JSON.stringify(customSubTasks));
+            localStorage.setItem('warrior_quick_timers', JSON.stringify(quickTimers));
+            updateHabitGauge();
+        }
+
+        function getActiveDay() {
+            if (simModeActive) return simDay;
+            const date = new Date();
+            const daysMap = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            return daysMap[date.getDay()];
+        }
+
+        function getActiveTime() {
+            if (simModeActive) return simTime;
+            const date = new Date();
+            return date.toTimeString().substring(0, 5); 
+        }
+
+        function resetHabits() {
+            if (confirm("هل أنت متأكد من تصفير الجدول المائي والعادات اليوم بالكامل؟")) {
+                habitsCompleted = {};
+                waterCount = 0;
+                activeMicroChecklistState = {};
+                savePersistence();
+                renderHabitsForDay();
+                updateChronologyCompass();
+                playChime(220, 0.4);
+            }
+        }
+
+        function renderHabitsForDay() {
+            const container = document.getElementById('day-habits-container');
+            const currentDay = getActiveDay();
+            const dayHabits = dayHabitsMetadata[currentDay];
+            
+            container.innerHTML = '';
+            
+            dayHabits.forEach((habitName, idx) => {
+                const habitId = `${currentDay}_${idx}`;
+                const isChecked = habitsCompleted[habitId] || false;
+                
+                const item = document.createElement('div');
+                item.className = `flex items-center justify-between p-3 rounded-xl border transition-all duration-200 cursor-pointer ${
+                    isChecked ? 'border-neon-emerald/40 bg-neon-emerald/5' : 'border-slate-800 bg-slate-950/40'
+                }`;
+                item.onclick = () => toggleHabit(habitId);
+                
+                const label = document.createElement('span');
+                label.className = `text-xs ${isChecked ? 'text-white font-bold' : 'text-slate-400'}`;
+                label.textContent = habitName;
+                
+                const checkbox = document.createElement('div');
+                checkbox.className = `w-5 h-5 rounded border flex items-center justify-center transition ${
+                    isChecked ? 'border-neon-emerald bg-neon-emerald text-slate-950' : 'border-slate-800 bg-slate-900'
+                }`;
+                checkbox.innerHTML = isChecked ? '✔' : '';
+                
+                item.appendChild(label);
+                item.appendChild(checkbox);
+                container.appendChild(item);
+            });
+            updateHabitGauge();
+        }
+
+        function toggleHabit(habitId) {
+            habitsCompleted[habitId] = !habitsCompleted[habitId];
+            savePersistence();
+            renderHabitsForDay();
+            playChime(habitsCompleted[habitId] ? 600 : 300, 0.15);
+        }
+
+        const dayHabitsMetadata = {
+            "Wednesday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Thursday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Friday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Saturday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Sunday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Monday": ["قيلولة فجرية 🌅", "ورد القرآن 📖", "التدريب والاستشفاء 🥊", "الخروج العائلي الكبير 🚗", "الـ 10 دقائق العاطفية 🤍", "النوم المرن 😴"],
+            "Tuesday": ["كتابة وجدولة البوستات 🌅", "ورد القرآن 📖", "تجهيز وجبات الأسبوع 🥗", "الهندسة العضلية الدقيقة 🥊", "الـ 10 دقائق والصلوات 🤍", "النوم 22:30 😴"]
+        };
+
+        function updateHabitGauge() {
+            const currentDay = getActiveDay();
+            const dayHabits = dayHabitsMetadata[currentDay];
+            let checkedCount = 0;
+            
+            dayHabits.forEach((_, idx) => {
+                const habitId = `${currentDay}_${idx}`;
+                if (habitsCompleted[habitId]) checkedCount++;
+            });
+
+            const percent = Math.round((checkedCount / dayHabits.length) * 100) || 0;
+            const strokeDashOffset = 175.9 - (175.9 * percent) / 100;
+            
+            document.getElementById('habit-gauge-fill').setAttribute('stroke-dashoffset', strokeDashOffset);
+            document.getElementById('habit-gauge-text').textContent = `${percent}%`;
+            
+            const statusEl = document.getElementById('habit-gauge-status');
+            if (percent === 100) {
+                statusEl.textContent = "مستوى مقاتل أسطوري! 🏆";
+                statusEl.className = "text-xs font-black text-neon-cyan mt-0.5";
+            } else if (percent >= 50) {
+                statusEl.textContent = "استمر؛ فاضل تكات بسيطة! ⚡";
+                statusEl.className = "text-xs font-black text-neon-emerald mt-0.5";
+            } else {
+                statusEl.textContent = "ابدأ الفرم الآن! 🥊";
+                statusEl.className = "text-xs font-black text-neon-gold mt-0.5";
+            }
+        }
+
+        // Water Counter
+        function addWater(val) {
+            waterCount = Math.max(0, waterCount + val);
+            savePersistence();
+            document.getElementById('water-count').textContent = waterCount;
+            document.getElementById('water-liters').textContent = (waterCount * 0.3).toFixed(1);
+            playChime(659.25, 0.1, 'sine');
+        }
+
+        // Time Engine & Scheduler Compass
+        function getDaySchedule(day) {
+            if (day === "Monday") return mondaySchedule;
+            if (day === "Tuesday") return tuesdaySchedule;
+            return workDaySchedule;
+        }
+
+        function timeToMinutes(timeStr) {
+            const [h, m] = timeStr.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function updateChronologyCompass() {
+            const currentDay = getActiveDay();
+            const currentTimeStr = getActiveTime();
+            const currentMinutes = timeToMinutes(currentTimeStr);
+            const schedule = getDaySchedule(currentDay);
+            
+            let activeIdx = 0;
+            for (let i = 0; i < schedule.length; i++) {
+                const startMin = timeToMinutes(schedule[i].start);
+                const endMin = timeToMinutes(schedule[i].end);
+                
+                if (currentMinutes >= startMin && currentMinutes < endMin) {
+                    activeIdx = i;
+                    break;
+                }
+            }
+
+            const currentBlock = schedule[activeIdx];
+            const prevBlock = schedule[activeIdx - 1] || schedule[schedule.length - 1];
+            const nextBlock = schedule[activeIdx + 1] || schedule[0];
+
+            // Render Compass Cards
+            document.getElementById('prev-task-time').textContent = `${prevBlock.start} - ${prevBlock.end}`;
+            document.getElementById('prev-task-title').textContent = prevBlock.title;
+
+            document.getElementById('current-task-category').textContent = currentBlock.category;
+            document.getElementById('current-task-title').textContent = currentBlock.title;
+            document.getElementById('current-task-time').textContent = `${currentBlock.start} - ${currentBlock.end}`;
+            document.getElementById('current-task-desc').textContent = currentBlock.desc;
+
+            document.getElementById('next-task-time').textContent = `${nextBlock.start} - ${nextBlock.end}`;
+            document.getElementById('next-task-title').textContent = nextBlock.title;
+
+            // Day label
+            const daysArabicMap = {
+                "Wednesday": "الأربعاء", "Thursday": "الخميس", "Friday": "الجمعة",
+                "Saturday": "السبت", "Sunday": "الأحد", "Monday": "الاثنين (ويكند عائلية)", "Tuesday": "الثلاثاء (ويكند تقني)"
+            };
+            document.getElementById('current-day-label').textContent = daysArabicMap[currentDay];
+
+            renderMicroSteps(currentBlock);
+            
+            // Render specific custom sub-tasks for this unique block key
+            const blockKey = `${currentDay}_${currentBlock.start}_${currentBlock.end}`;
+            renderCustomSubTasks(blockKey);
+            
+            adjustInteractiveWorkspace(currentDay, currentMinutes);
+        }
+
+        // Render Actionable steps for current hour
+        function renderMicroSteps(block) {
+            const container = document.getElementById('workspace-micro-steps');
+            const key = `${block.start}-${block.end}`;
+            const steps = taskMicroSteps[key] || ["لا توجد خطوات دقيقة مسجلة لهذه الفترة. ركز على التنفيذ الهادئ."];
+            
+            container.innerHTML = '';
+            steps.forEach((stepText, idx) => {
+                const stepID = `${getActiveDay()}_${key}_${idx}`;
+                const isChecked = activeMicroChecklistState[stepID] || false;
+                
+                const stepRow = document.createElement('div');
+                stepRow.className = "flex items-center justify-between p-2 rounded-lg bg-slate-900/50 border border-slate-800 hover:border-slate-700 transition cursor-pointer";
+                stepRow.onclick = () => {
+                    activeMicroChecklistState[stepID] = !activeMicroChecklistState[stepID];
+                    savePersistence();
+                    renderMicroSteps(block);
+                    playChime(activeMicroChecklistState[stepID] ? 700 : 350, 0.1, 'sine');
+                };
+
+                stepRow.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] bg-slate-800 text-slate-500 rounded-full w-5 h-5 flex items-center justify-center font-mono font-bold">${idx + 1}</span>
+                        <p class="text-xs ${isChecked ? 'text-slate-500 line-through' : 'text-slate-300'}">${stepText}</p>
+                    </div>
+                    <div class="w-4 h-4 rounded border flex items-center justify-center ${isChecked ? 'bg-neon-gold border-neon-gold text-slate-950 text-[10px]' : 'border-slate-800 bg-slate-900'}">
+                        ${isChecked ? '✔' : ''}
+                    </div>
+                `;
+                container.appendChild(stepRow);
+            });
+        }
+
+        // NEW: CUSTOM SUB-TASKS ENGINE FUNCTIONS
+        function addCustomSubTask() {
+            const input = document.getElementById('custom-subtask-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const currentDay = getActiveDay();
+            const schedule = getDaySchedule(currentDay);
+            const currentTimeStr = getActiveTime();
+            const currentMinutes = timeToMinutes(currentTimeStr);
+            
+            let activeIdx = 0;
+            for (let i = 0; i < schedule.length; i++) {
+                if (currentMinutes >= timeToMinutes(schedule[i].start) && currentMinutes < timeToMinutes(schedule[i].end)) {
+                    activeIdx = i;
+                    break;
+                }
+            }
+            const currentBlock = schedule[activeIdx];
+            const blockKey = `${currentDay}_${currentBlock.start}_${currentBlock.end}`;
+
+            if (!customSubTasks[blockKey]) customSubTasks[blockKey] = [];
+            customSubTasks[blockKey].push({
+                id: Date.now(),
+                text: text,
+                done: false
+            });
+
+            input.value = '';
+            savePersistence();
+            renderCustomSubTasks(blockKey);
+            playChime(650, 0.1, 'sine');
+        }
+
+        function renderCustomSubTasks(blockKey) {
+            const container = document.getElementById('custom-subtasks-list');
+            container.innerHTML = '';
+            
+            const tasks = customSubTasks[blockKey] || [];
+            if (tasks.length === 0) {
+                container.innerHTML = `<p class="text-[11px] text-slate-500 text-center py-1 font-tajawal">لا توجد مهام تفصيلية فرعية مضافة حالياً في هذا البلوك.</p>`;
+                return;
+            }
+
+            tasks.forEach(task => {
+                const row = document.createElement('div');
+                row.className = `flex items-center justify-between p-2 rounded-xl border text-xs transition ${
+                    task.done ? 'bg-slate-900/40 border-slate-800 opacity-50' : 'bg-slate-900 border-slate-800'
+                }`;
+                
+                row.innerHTML = `
+                    <div class="flex items-center gap-2 flex-grow cursor-pointer" onclick="toggleCustomSubTask('${blockKey}', ${task.id})">
+                        <div class="w-4 h-4 rounded border flex items-center justify-center ${
+                            task.done ? 'bg-neon-gold border-neon-gold text-slate-950 font-bold' : 'border-slate-700 bg-slate-950'
+                        } text-[10px]">
+                            ${task.done ? '✔' : ''}
+                        </div>
+                        <span class="${task.done ? 'line-through text-slate-500' : 'text-slate-200'} font-tajawal">${task.text}</span>
+                    </div>
+                    <button onclick="deleteCustomSubTask('${blockKey}', ${task.id})" class="text-neon-ruby hover:text-white px-2 text-[10px]">حذف</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function toggleCustomSubTask(blockKey, id) {
+            if (customSubTasks[blockKey]) {
+                const task = customSubTasks[blockKey].find(t => t.id === id);
+                if (task) {
+                    task.done = !task.done;
+                    savePersistence();
+                    renderCustomSubTasks(blockKey);
+                    playChime(task.done ? 700 : 350, 0.1, 'sine');
+                }
+            }
+        }
+
+        function deleteCustomSubTask(blockKey, id) {
+            if (customSubTasks[blockKey]) {
+                customSubTasks[blockKey] = customSubTasks[blockKey].filter(t => t.id !== id);
+                savePersistence();
+                renderCustomSubTasks(blockKey);
+                playChime(250, 0.15, 'sine');
+            }
+        }
+
+        // NEW: QUICK TIMER PROTOCOL ENGINE (حلة الرز)
+        function addQuickTimer() {
+            const textInput = document.getElementById('quick-timer-text');
+            const minsInput = document.getElementById('quick-timer-mins');
+            const text = textInput.value.trim() || "تنبيه طارئ بمهمتك الفورية! 🚨";
+            const mins = parseInt(minsInput.value) || 0;
+
+            if (mins <= 0) return;
+
+            const triggerTime = Date.now() + (mins * 60 * 1000);
+            quickTimers.push({
+                id: Date.now(),
+                text: text,
+                triggerTime: triggerTime
+            });
+
+            textInput.value = "";
+            minsInput.value = "";
+            savePersistence();
+            renderQuickTimers();
+            playChime(500, 0.2, 'sine');
+        }
+
+        function renderQuickTimers() {
+            const container = document.getElementById('quick-timers-container');
+            container.innerHTML = '';
+
+            if (quickTimers.length === 0) {
+                container.innerHTML = `<p class="text-[10px] text-slate-500 text-center py-1">لا توجد مؤقتات طوارئ طارئة حالياً.</p>`;
+                return;
+            }
+
+            quickTimers.forEach(timer => {
+                const remainingMs = timer.triggerTime - Date.now();
+                const remainingMins = Math.max(0, Math.ceil(remainingMs / 60000));
+                const row = document.createElement('div');
+                row.className = "flex justify-between items-center bg-neon-ruby/5 border border-neon-ruby/20 p-2 rounded-xl text-[11px] font-tajawal";
+                row.innerHTML = `
+                    <span class="text-slate-300 font-bold truncate max-w-[170px]">📌 ${timer.text}</span>
+                    <span class="text-neon-ruby font-mono font-bold animate-pulse">متبقي ${remainingMins} د</span>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function checkQuickTimers() {
+            const now = Date.now();
+            let triggered = false;
+
+            quickTimers.forEach((timer, idx) => {
+                if (now >= timer.triggerTime) {
+                    triggered = true;
+                    playChime(1000, 0.5, 'triangle');
+                    setTimeout(() => playChime(1000, 0.5, 'triangle'), 200);
+                    alert(`🚨 تنبيه الطوارئ الفوري: ${timer.text}`);
+                    quickTimers.splice(idx, 1);
+                }
+            });
+
+            if (triggered) {
+                savePersistence();
+                renderQuickTimers();
+            }
+        }
+
+        // Live Workspace Adapter based on Time Slot
+        function adjustInteractiveWorkspace(day, currentMinutes) {
+            const isStudyTime = (currentMinutes >= timeToMinutes("05:00") && currentMinutes < timeToMinutes("07:30")) || 
+                                (day === "Tuesday" && currentMinutes >= timeToMinutes("05:00") && currentMinutes < timeToMinutes("08:00")) ||
+                                (day === "Thursday" && currentMinutes >= timeToMinutes("17:00") && currentMinutes < timeToMinutes("18:30")) ||
+                                (day === "Saturday" && currentMinutes >= timeToMinutes("17:00") && currentMinutes < timeToMinutes("18:30"));
+            
+            const isWorkoutTime = (currentMinutes >= timeToMinutes("18:30") && currentMinutes < timeToMinutes("19:30"));
+            
+            const isMealTime = (currentMinutes >= timeToMinutes("10:00") && currentMinutes < timeToMinutes("10:30")) || 
+                               (currentMinutes >= timeToMinutes("16:00") && currentMinutes < timeToMinutes("16:30")) ||
+                               (currentMinutes >= timeToMinutes("18:00") && currentMinutes < timeToMinutes("18:30") && (day === "Wednesday" || day === "Friday" || day === "Sunday")) ||
+                               (currentMinutes >= timeToMinutes("19:30") && currentMinutes < timeToMinutes("20:15"));
+
+            const studyW = document.getElementById('widget-study');
+            const workoutW = document.getElementById('widget-workout');
+            const mealW = document.getElementById('widget-meal');
+            const standbyW = document.getElementById('widget-standby');
+            const workspaceBadge = document.getElementById('workspace-badge');
+
+            // Hide all initially
+            studyW.classList.add('hidden');
+            workoutW.classList.add('hidden');
+            mealW.classList.add('hidden');
+            standbyW.classList.add('hidden');
+
+            const workspacePanel = document.getElementById('interactive-workspace');
+            workspacePanel.classList.remove('active-pulse', 'active-pulse-cyan');
+
+            if (isStudyTime) {
+                studyW.classList.remove('hidden');
+                workspaceBadge.textContent = "بلوك الفرم والتطوير";
+                document.getElementById('workspace-heading').textContent = "مُدرب الـ Deep Work التفاعلي";
+                document.getElementById('workspace-icon').textContent = "🧘";
+                workspacePanel.classList.add('active-pulse-cyan');
+            } else if (isWorkoutTime) {
+                workoutW.classList.remove('hidden');
+                workspaceBadge.textContent = "الاستوديو القتالي الحي";
+                document.getElementById('workspace-heading').textContent = "مُدرب تمرين المقاتل الهجين الـ 7 أيام";
+                document.getElementById('workspace-icon').textContent = "🥊";
+                workspacePanel.classList.add('active-pulse');
+                setupWorkoutForDay(day);
+            } else if (isMealTime) {
+                mealW.classList.remove('hidden');
+                workspaceBadge.textContent = "بروتوكول البنزين النظيف";
+                document.getElementById('workspace-heading').textContent = "دليل الوجبة الحالية الحية";
+                document.getElementById('workspace-icon').textContent = "🥗";
+                setupMealWidget(currentMinutes);
+            } else {
+                standbyW.classList.remove('hidden');
+                workspaceBadge.textContent = "وضع الانتظار الصامت";
+                document.getElementById('workspace-heading').textContent = "محطة التدفق الصامت";
+                document.getElementById('workspace-icon').textContent = "⚡";
+            }
+        }
+
+        // STUDY TIMER ENGINE
+        const studyPhases = [
+            { name: "سبرينت التركيز الأول (50 دقيقة) 🧠", duration: 50 * 60, color: "#10B981" },
+            { name: "بريك الراحة الأول (10 دقائق) 🌬️", duration: 10 * 60, color: "#06B6D4" },
+            { name: "سبرينت التركيز الثاني (50 دقيقة) 🧠", duration: 50 * 60, color: "#10B981" },
+            { name: "بريك الراحة الثاني (10 دقائق) 🌬️", duration: 10 * 60, color: "#06B6D4" },
+            { name: "تقفيل وتثبيت سريع (30 دقيقة)", duration: 30 * 60, color: "#8B5CF6" }
+        ];
+        let currentSprintPhase = 0;
+        let sprintTimerInterval = null;
+        let sprintTimeRemaining = studyPhases[0].duration;
+        let isSprintActive = false;
+
+        function setStudyPhase(phaseIdx) {
+            clearInterval(sprintTimerInterval);
+            isSprintActive = false;
+            currentSprintPhase = phaseIdx;
+            const phase = studyPhases[phaseIdx];
+            sprintTimeRemaining = phase.duration;
+            
+            document.getElementById('study-phase-title').textContent = phase.name;
+            document.getElementById('study-control-btn').textContent = phaseIdx % 2 === 1 ? "بدء الراحة الاستشفائية" : "بدء التركيز الذهني";
+            document.getElementById('study-control-btn').className = phaseIdx % 2 === 1 
+                ? "bg-neon-cyan text-slate-950 font-black px-6 py-2 rounded-xl text-xs transition transform hover:scale-[1.03] shadow-neon-cyan"
+                : "bg-neon-emerald text-slate-950 font-black px-6 py-2 rounded-xl text-xs transition transform hover:scale-[1.03] shadow-neon-emerald";
+            
+            for (let i = 0; i < 5; i++) {
+                const btn = document.getElementById(`sbtn-${i}`);
+                if (i === phaseIdx) {
+                    btn.className = "px-2.5 py-1 text-[9px] font-black rounded-lg bg-slate-800 text-neon-cyan border border-slate-700/80 transition";
+                } else {
+                    btn.className = "px-2.5 py-1 text-[9px] font-black rounded-lg text-slate-400 hover:text-white transition";
+                }
+            }
+            updateStudyTimerDisplay();
+        }
+
+        function updateStudyTimerDisplay() {
+            const m = Math.floor(studyTimeRemaining / 60).toString().padStart(2, '0');
+            const s = (studyTimeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById('study-countdown').textContent = `${m}:${s}`;
+        }
+
+        function toggleStudyTimer() {
+            const btn = document.getElementById('study-control-btn');
+            if (isSprintActive) {
+                clearInterval(sprintTimerInterval);
+                isSprintActive = false;
+                btn.textContent = "استكمال التركيز";
+            } else {
+                isSprintActive = true;
+                btn.textContent = "إيقاف مؤقت";
+                sprintTimerInterval = setInterval(() => {
+                    sprintTimeRemaining--;
+                    updateStudyTimerDisplay();
+                    if (sprintTimeRemaining <= 0) {
+                        clearInterval(sprintTimerInterval);
+                        isSprintActive = false;
+                        
+                        playChime(880, 0.4);
+                        setTimeout(() => playChime(1100, 0.5), 200);
+
+                        alert("انتهى الموعد الحالي! خذ بريك وادخل في الخطوة التالية.");
+                        const nextPhase = (currentSprintPhase + 1) % studyPhases.length;
+                        setStudyPhase(nextPhase);
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetStudyTimer() {
+            setStudyPhase(currentSprintPhase);
+        }
+
+        const lazyQuotes = [
+            "ابنك واقف بيراقبك برة وبيعتبرك السوبر هيرو بتاعه وبيردد تصرفاتك. هتعلمه إيه؟ إن البطل بيقفل لما يتعب ولا إن البطل بيكمل تمرين ومذاكرة حتى وهو ملوش مزاج؟ ابلع ريقك وقوم صفي دماغك!",
+            "الالتزام هو الفارق الحاسم بين الشخص الهاوي والشخص المحترف. اقطع التفكير وابدأ الفعل فوراً.",
+            "الشغف كذبة بتموت بعد أول نص ساعة من الصعوبة؛ لكن الانضباط الفولاذي هو المحرك الوحيد اللي بيوصلك لخط النهاية."
+        ];
+
+        function triggerLazyAdvice() {
+            const randomIndex = Math.floor(Math.random() * lazyQuotes.length);
+            const quote = lazyQuotes[randomIndex];
+            showModal("Championship Round 🥊", quote, "🥋");
+        }
+
+        // DETAILED GYM & MMA ENGINE (REP-BY-REP)
+        let activeWorkoutDay = "";
+        let dayExercises = [];
+        let currentExerciseIndex = 0;
+        let restTimerInterval = null;
+        let restTimeRemaining = 0;
+
+        function setupWorkoutForDay(day) {
+            if (activeWorkoutDay === day) return; 
+            activeWorkoutDay = day;
+            dayExercises = JSON.parse(JSON.stringify(shamilWorkoutPlan[day] || [])); 
+            currentExerciseIndex = 0;
+            
+            const dayArabicMap = {
+                "Wednesday": "الأربعاء (حديد + MMA)", "Thursday": "الخميس (HIIT وكور)", "Friday": "الجمعة (أرجل ومستوى)",
+                "Saturday": "السبت (سبارينج ظل)", "Sunday": "الأحد (قوة وضخ دم)", "Monday": "الاثنين (استشفاء نشط)", "Tuesday": "الثلاثاء (رقبة وقبضة)"
+            };
+            document.getElementById('workout-day-badge').textContent = dayArabicMap[day];
+            renderExercisesList();
+            loadExercise(0);
+        }
+
+        function renderExercisesList() {
+            const container = document.getElementById('workout-exercises-list');
+            container.innerHTML = '';
+            dayExercises.forEach((exc, idx) => {
+                const totalSets = exc.sets.length;
+                const completedSets = exc.sets.filter(s => s.done).length;
+                const isFullyDone = completedSets === totalSets;
+                
+                const item = document.createElement('div');
+                item.className = `p-3 border rounded-xl transition duration-150 flex items-center justify-between text-right cursor-pointer ${
+                    idx === currentExerciseIndex 
+                        ? 'border-neon-emerald bg-neon-emerald/5 shadow-neon-emerald' 
+                        : isFullyDone ? 'border-emerald-950/80 bg-slate-950/30 opacity-60' : 'border-slate-800 bg-slate-900/60'
+                }`;
+                item.onclick = () => loadExercise(idx);
+
+                item.innerHTML = `
+                    <div>
+                        <div class="text-xs font-black text-white">${exc.name}</div>
+                        <span class="text-[9px] text-slate-500">${completedSets} / ${totalSets} مجموعات مكتملة</span>
+                    </div>
+                    <span class="text-[10px] text-neon-cyan font-mono font-bold">${isFullyDone ? '✔' : totalSets + ' مجموعات'}</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function loadExercise(idx) {
+            if (idx >= dayExercises.length) {
+                clearInterval(restTimerInterval);
+                document.getElementById('workout-status').textContent = "تمرين مكتمل 🎉";
+                document.getElementById('player-exc-name').textContent = "عاش يا بطل الأبطال! 🏆";
+                document.getElementById('player-exc-desc').textContent = "أنهيت كامل الحصة التدريبية المخصصة لليوم بنجاح فولاذي، فك عضلاتك واتجه فوراً للدوش والبروتين!";
+                document.getElementById('exercise-sets-tracker').innerHTML = '<div class="text-center py-4 text-xs text-neon-emerald font-black">🏆 تمرين ممتاز ومكتمل!</div>';
+                document.getElementById('player-timer').textContent = "00:00";
+                playChime(880, 0.6, 'sine');
+                return;
+            }
+
+            clearInterval(restTimerInterval);
+            currentExerciseIndex = idx;
+            const exc = dayExercises[idx];
+            
+            document.getElementById('player-exc-index').textContent = `التمرينة الحالية (${idx + 1} / ${dayExercises.length})`;
+            document.getElementById('player-exc-name').textContent = exc.name;
+            document.getElementById('player-exc-desc').textContent = exc.desc;
+            document.getElementById('workout-overall-progress').textContent = `تمرين ${idx + 1} / ${dayExercises.length}`;
+            
+            renderSetsTracker(exc);
+            renderExercisesList();
+            updateRestTimerDisplay(0);
+        }
+
+        function renderSetsTracker(exc) {
+            const container = document.getElementById('exercise-sets-tracker');
+            container.innerHTML = '';
+            
+            exc.sets.forEach((set, idx) => {
+                const setRow = document.createElement('div');
+                setRow.className = `flex items-center justify-between p-2 rounded-xl border transition ${
+                    set.done ? 'bg-neon-emerald/5 border-neon-emerald/30' : 'bg-slate-900/50 border-slate-800'
+                }`;
+                setRow.onclick = () => toggleSet(exc, idx);
+
+                setRow.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] bg-slate-800 text-slate-400 rounded-full w-5 h-5 flex items-center justify-center font-mono font-bold">M${idx + 1}</span>
+                        <span class="text-xs font-bold text-white">${set.reps}</span>
+                        <span class="text-[10px] text-slate-500 font-mono">الوزن: ${set.weight}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[9px] text-slate-500 font-mono">الراحة: ${set.rest}ث</span>
+                        <div class="w-4 h-4 rounded border flex items-center justify-center ${
+                            set.done ? 'bg-neon-emerald border-neon-emerald text-slate-950 text-[10px]' : 'border-slate-800 bg-slate-900'
+                        }">
+                            ${set.done ? '✔' : ''}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(setRow);
+            });
+        }
+
+        function toggleSet(exc, setIdx) {
+            const set = exc.sets[setIdx];
+            set.done = !set.done;
+            renderSetsTracker(exc);
+            renderExercisesList();
+            playChime(set.done ? 600 : 300, 0.1, 'sine');
+            
+            if (set.done && set.rest > 0) {
+                restTimeRemaining = set.rest;
+                startRestTimer();
+            }
+        }
+
+        function startRestTimer() {
+            clearInterval(restTimerInterval);
+            document.getElementById('workout-rest-btn').textContent = "جاري الاستشفاء...";
+            document.getElementById('workout-rest-btn').className = "bg-neon-ruby hover:bg-neon-ruby/90 text-white font-black px-4 py-1.5 rounded-lg text-[10px] transition animate-pulse";
+            
+            updateRestTimerDisplay(restTimeRemaining);
+            playChime(880, 0.15, 'sine');
+
+            restTimerInterval = setInterval(() => {
+                restTimeRemaining--;
+                updateRestTimerDisplay(restTimeRemaining);
+                if (restTimeRemaining <= 0) {
+                    clearInterval(restTimerInterval);
+                    document.getElementById('workout-rest-btn').textContent = "تفعيل مؤقت الراحة";
+                    document.getElementById('workout-rest-btn').className = "bg-neon-cyan hover:bg-neon-cyan/90 text-slate-950 font-black px-4 py-1.5 rounded-lg text-[10px] transition";
+                    
+                    playChime(1200, 0.3, 'sine');
+                    setTimeout(() => playChime(1200, 0.3, 'sine'), 150);
+                }
+            }, 1000);
+        }
+
+        function updateRestTimerDisplay(secs) {
+            const m = Math.floor(secs / 60).toString().padStart(2, '0');
+            const s = (secs % 60).toString().padStart(2, '0');
+            document.getElementById('player-timer').textContent = `${m}:${s}`;
+        }
+
+        function skipExercise() {
+            loadExercise(currentExerciseIndex + 1);
+        }
+
+        // NUTRITION WIDGET BUILDER
+        function setupMealWidget(currentMinutes) {
+            const titleEl = document.getElementById('meal-widget-title');
+            const descEl = document.getElementById('meal-widget-desc');
+            const impactEl = document.getElementById('meal-widget-impact');
+
+            if (currentMinutes >= timeToMinutes("10:00") && currentMinutes < timeToMinutes("10:30")) {
+                titleEl.textContent = "الفطار السحري العائلي (الساعة 10:30 صباحاً) 🍳";
+                descEl.textContent = "4 لـ 5 معالق فول بالكمون والليمون ونقطة زيت زيتون + بيضتين مسلوقين + رغيف عيش بلدي أسمر بالردة + خيارة وطماطم.";
+                impactEl.textContent = "تثبيت التركيز ومنع الخمول";
+            } else if ((currentMinutes >= timeToMinutes("16:00") && currentMinutes < timeToMinutes("16:30")) || 
+                       (currentMinutes >= timeToMinutes("18:00") && currentMinutes < timeToMinutes("18:30"))) {
+                titleEl.textContent = "السناك الدوباميني وبنزين التمرين (قبل المجهود) 🥜";
+                descEl.textContent = "كوب مياه كبير + 3 تمرات + حفنة صغيرة (ملء كف الإيد) فول سوداني مصري محمص بدون ملح زائد لضمان وقود تمرين الـ MMA والحديد.";
+                impactEl.textContent = "طاقة انفجارية فورية للعضلات";
+            } else if (currentMinutes >= timeToMinutes("19:30") && currentMinutes < timeToMinutes("21:30")) {
+                titleEl.textContent = "العشاء الخفيف ومصلح الألياف (بعد التمرين) 🐟";
+                descEl.textContent = "علبة تونة مصفاة من الزيت تماماً + ربع لـ نصف رغيف عيش بلدي + طبق سلطة خضراء كبير. (أو بيضتين وقريش) ممنوع الأكل الثقيل نهائياً.";
+                impactEl.textContent = "إصلاح العضلات وسرعة الدخول بالنوم";
+            }
+        }
+
+        // TIME SIMULATOR CONTROLS
+        function toggleSimulator() {
+            const drawer = document.getElementById('simulator-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        function runSimulation() {
+            simModeActive = true;
+            simDay = document.getElementById('sim-day-select').value;
+            simTime = document.getElementById('sim-time-input').value;
+            
+            document.getElementById('live-clock').textContent = `${simTime} (محاكاة)`;
+            renderHabitsForDay();
+            updateChronologyCompass();
+        }
+
+        function disableSimulation() {
+            simModeActive = false;
+            document.getElementById('simulator-drawer').classList.add('hidden');
+            renderHabitsForDay();
+            updateChronologyCompass();
+            updateClock();
+        }
+
+        // CONSTITUTION ALERTS
+        const modalMetadata = {
+            'zero-day': {
+                icon: "🛡️",
+                title: "بروتوكول اليوم الصِفري (خط الدفاع الأخير)",
+                body: "لو واجهت أسوأ يوم في أسبوعك (مرض، تعب شديد، أو انقطاع نت وكهرباء كارثي)؛ ممنوع تقفل بـ 'صفر إنجاز'. نفّذ الحد الأدنى (10 دقائق فقط) لحفظ الهوية الانضباطية أمام خلايا دماغك: <br><strong class='text-neon-gold'>• قرآن:</strong> 3 آيات فقط | <strong class='text-neon-gold'>• كورس:</strong> فيديو دقيقتين | <strong class='text-neon-gold'>• تمرين:</strong> 10 عدات ضغط | <strong class='text-neon-gold'>• إنجليزي:</strong> مراجعة 3 كلمات."
+            },
+            'power-cut': {
+                icon: "🔌",
+                title: "خطة النور والنت قطع فجأة الفورية",
+                body: "بلوك الفجر لازم تكون مأمنه من بالليل: نزل فيديوهات الكورسات أوفلاين على الموبايل أو اللاب توب المشحون. لو النور قطع؛ افتح الفيديوهات الأوفلاين فوراً، أو اقلب البلوك فوراً لتطوير الإنجليزي (Shadowing) من الفيديوهات الصوتية المُحملة. دايماً خلي عندك خطة Offline جاهزة."
+            },
+            'guests': {
+                icon: "👥",
+                title: "صمام الطوارئ الأسرية (ضيوف جم فجأة)",
+                body: "صلة الرحم وإكرام الضيف أولوية مطلقة وفوق أي جدول. اقعد مع ضيوفك ببشاشة تامة وذهن حاضر. هذا اليوم يتحول أوتوماتيكياً لـ 'يوم الحد الأدنى' (Zero Day). بعد ما يمشوا، خد 5 دقائق نفّذ فيهم الحد الأدنى وتنام بضمير مرتاح لأن ضيافة أهلك جزء من نجاحك كأب صالح وزوج راقٍ."
+            },
+            'insomnia': {
+                icon: "🛌",
+                title: "بروتوكول قهر الأرق بيولوجياً",
+                body: "دخلت السرير ومش جايلك نوم وعينك عمالة تفتح؟ <strong class='text-neon-ruby'>إياك وتلمس الموبايل وتفتح ريلز!</strong> ده هيسهرك لـ 2 الفجر ويدمر فجر بكرة. ولّع كشاف خفيف جداً، وهات مصحف ورق أو كتاب ورق واقرأ فيه وأنت على السرير. القراءة الورقية في إضاءة خافتة تجهد العين وتفرز الميلاتونين لتنام في أقل من 10 دقائق."
+            }
+        };
+
+        function showQuickModal(key) {
+            const meta = modalMetadata[key];
+            if (meta) showModal(meta.title, meta.body, meta.icon);
+        }
+
+        function showModal(title, body, icon) {
+            document.getElementById('modal-icon').textContent = icon;
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').innerHTML = body;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        function toggleConstitutionDocs() {
+            const content = document.getElementById('constitution-docs-content');
+            const icon = document.getElementById('doc-toggle-icon');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.textContent = "➖ إخفاء";
+            } else {
+                content.classList.add('hidden');
+                icon.textContent = "➕ تفاصيل";
+            }
+        }
+
+        // Active week schedule databases
+        const workDaySchedule = [
+            { start: "00:00", end: "04:30", category: "النوم والراحة", title: "النوم العميق 💤", desc: "تطبيق بروتوكول جودة النوم لتهيئة الجهاز العصبي للفجر." },
+            { start: "04:30", end: "05:00", category: "الصلوات والروحانيات", title: "الاستيقاظ وصلاة الفجر جماعة 🌅", desc: "براح كامل للحمام والوضوء والصلاة جماعة بالمسجد." },
+            { start: "05:00", end: "07:30", category: "التركيز والتطوير", title: "بلوك المذاكرة الذهبي (الكورسات الصعبة) 🖥️", desc: "قسّم البلوك لـ 3 سبرينتات تركيز وفصل ذهني (Ultradian Rhythms) لحرق المحتوى الصعب." },
+            { start: "07:30", end: "08:00", category: "الصلوات والروحانيات", title: "ورد القرآن الكريم اليومي 📖", desc: "حفظ وتسميع الورد اليومي مع ركعتي سنة الفجر لتثبيته." },
+            { start: "08:00", end: "10:00", category: "الوظيفة والإنتاج", title: "بلوك العمل الأول (تقفيل المهام الكبيرة) 💼", desc: "إنجاز مهام الشغل والتقارير الأساسية قبل استيقاظ العائلة في هدوء كامل." },
+            { start: "10:00", end: "10:30", category: "العائلة والتغذية", title: "بريك الفطور المشترك مع الزوجة والابن 🍳", desc: "شحن طاقة عاطفية وتناول وجبة الفول أو الجبنة القريش السحرية." },
+            { start: "10:30", end: "13:00", category: "الوظيفة والإنتاج", title: "بلوك العمل الثاني + التسويق الشخصي 🌐", desc: "يتخلله براح صلاة الظهر (20 دقيقة) + نصف ساعة LinkedIn تسويق مهني." },
+            { start: "13:00", end: "14:00", category: "النوم والراحة", title: "القيلولة الشرعية المظبوطة 😴", desc: "ساعة نوم كاملة لإراحة وصيانة الجهاز العصبي المركزي." },
+            { start: "14:00", end: "17:00", category: "الوظيفة والإنتاج", title: "بلوك العمل الثالث + الإنجليزية 🗣️", desc: "يتخلله براح صلاة العصر (20 دقيقة) + نصف ساعة لـ Shadowing الإنجليزية المهنية." },
+            { start: "17:00", end: "18:30", category: "البيت والتطوير", title: "مشوار السنتر والخروج مع الزوجة 🚗", desc: "خروج وتصفير طاقة البيت، أو بلوك المشاريع الحرة وتحديث الـ CV (في الأيام ب)." },
+            { start: "18:30", end: "19:30", category: "الرياضة والصحة", title: "تمرين المقاتل الهجين (حديد + MMA) 🥊", desc: "تفريغ شحنة الكورتيزول ميكانيكياً وبناء القوة بمشاركة الطفل الصغير." },
+            { start: "19:30", end: "21:30", category: "العائلة والصلوات", title: "وقت العائلة المستقر والعشاء الخفيف 🥗", desc: "عشاء منظم مصفى، جلسة هادئة، وبراح صلاتي المغرب والعشاء بامتياز." },
+            { start: "21:30", end: "22:30", category: "المكافآت الحرة", title: "ساعة الترفيه والمكافأة النظيفة 🎮", desc: "اللعب بضمير مستريح تماماً وبدون أي جلد للذات." },
+            { start: "22:30", end: "24:00", category: "النوم والراحة", title: "النوم العميق 💤", desc: "تطبيق بروتوكول جودة النوم لتهيئة الجهاز العصبي للفجر." }
+        ];
+
+        const mondaySchedule = [
+            { start: "00:00", end: "08:00", category: "النوم والراحة", title: "النوم المتأخر الاستشفائي 💤", desc: "إراحة تامة للجهاز العصبي وإطالة فترات النوم." },
+            { start: "08:00", end: "18:30", category: "العائلة والترفيه", title: "الويكند العائلي الأكبر والفسحة الطويلة 🚗", desc: "خروج كامل مع الزوجة والطفل، تغيير جو، وتصفير كامل لعداد الإجهاد." },
+            { start: "18:30", end: "19:30", category: "الرياضة والصحة", title: "الاستشفاء النشط والإطالات العميقة (Active Recovery) 🧘", desc: "روتين إطالات كاملة لفك الحوض وتحفيز المرونة وإصلاح الجسم." },
+            { start: "19:30", end: "22:30", category: "العائلة والترفيه", title: "سهرة ويكند عائلية ممتعة 🍿", desc: "جلسة عائلية وسهرة مريحة دون التزام بضوابط النوم المبكرة." },
+            { start: "22:30", end: "24:00", category: "النوم والراحة", title: "الاستعداد للنوم العميق 💤", desc: "النوم الكافي لشحن طاقات الجسد." }
+        ];
+
+        const tuesdaySchedule = [
+            { start: "00:00", end: "04:30", category: "النوم والراحة", title: "النوم العميق 💤", desc: "تأمين النوم الكافي استعداداً للصحيان المبكر." },
+            { start: "04:30", end: "05:00", category: "الصلوات والروحانيات", title: "الاستيقاظ وصلاة الفجر جماعة 🌅", desc: "صحيان مبكر لتثبيت إيقاع الساعة البيولوجية للجسم." },
+            { start: "05:00", end: "08:00", category: "التركيز والتطوير", title: "طبخ رقمي: مصنع محتوى LinkedIn ✍️", desc: "كتابة وجدولة 4 بوستات مهنية للأسبوع الجديد في الـ Drafts لعدم التشتت وسط العمل." },
+            { start: "08:00", end: "18:30", category: "البيت والتأمين", title: "الطبخ الحياتي وتجهيز وجبات الأسبوع (Batch Cooking) 🥗", desc: "شراء المستلزمات الأسبوعية وتجهيز وجبات العمل مع الزوجة لتدمير عشوائية الأكل." },
+            { start: "18:30", end: "19:30", category: "الرياضة والصحة", title: "الهندسة العضلية الدقيقة وتثبيت التكنيك 🥊", desc: "تمارين لتقوية القبضة، الرقبة، عضلات الكور، وملاكمة ظل بطيئة للتحكم." },
+            { start: "19:30", end: "22:30", category: "العائلة والصلوات", title: "وقت عائلي هادئ وعشاء خفيف 🥗", desc: "جلسة تواصل نقية وعشاء مصفى ونوم عميق 22:30." },
+            { start: "22:30", end: "24:00", category: "النوم والراحة", title: "النوم العميق 💤", desc: "النوم الكافي استعداداً لبدء أسبوع الفرم غداً الأربعاء." }
+        ];
+
+        // Boot
+        window.onload = function() {
+            loadPersistence();
+            setStudyPhase(0);
+            updateChronologyCompass();
+            renderHabitsForDay();
+            
+            // تحديث دوري ميكانيكي كل ثانية لضمان تفعيل الوقت أوتوماتيكياً ودقة المنبهات اللحظية
+            setInterval(() => {
+                updateClock();
+                if (!simModeActive) {
+                    updateChronologyCompass();
+                }
+                checkQuickTimers();
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
