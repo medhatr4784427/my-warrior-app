@@ -459,15 +459,10 @@
         let activeMicroChecklistState = {};
         let customSubTasks = {}; 
         let quickTimers = [];
-        const dayHabitsMetadata = {
-            "Wednesday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
-            "Thursday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
-            "Friday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
-            "Saturday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
-            "Sunday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
-            "Monday": ["قيلولة فجرية 🌅", "ورد القرآن 📖", "التدريب والاستشفاء 🥊", "الخروج العائلي الكبير 🚗", "الـ 10 دقائق العاطفية 🤍", "النوم المرن 😴"],
-            "Tuesday": ["كتابة وجدولة البوستات 🌅", "ورد القرآن 📖", "تجهيز وجبات الأسبوع 🥗", "الهندسة العضلية الدقيقة 🥊", "الـ 10 دقائق والصلوات 🤍", "النوم 22:30 😴"]
-        };
+
+        // =========================================================================
+        // DATA STRUCTURES HOISTING (BUG 2 FIX) - Moving all configs to the top
+        // =========================================================================
         const taskMicroSteps = {
             "00:00-04:30": [
                 "اتأكد إن الشاشات مقفولة وموبيلك أبيض وأسود.",
@@ -551,7 +546,6 @@
             ]
         };
 
-        // 100% Granular Gym & MMA Exercises Plan
         const shamilWorkoutPlan = {
             "Wednesday": [
                 { name: "DB Floor Press (بنش على الأرض)", sets: [
@@ -677,6 +671,89 @@
             ]
         };
 
+        const dayHabitsMetadata = {
+            "Wednesday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Thursday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Friday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Saturday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Sunday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Monday": ["قيلولة فجرية 🌅", "ورد القرآن 📖", "التدريب والاستشفاء 🥊", "الخروج العائلي الكبير 🚗", "الـ 10 دقائق العاطفية 🤍", "النوم المرن 😴"],
+            "Tuesday": ["كتابة وجدولة البوستات 🌅", "ورد القرآن 📖", "تجهيز وجبات الأسبوع 🥗", "الهندسة العضلية الدقيقة 🥊", "الـ 10 دقائق والصلوات 🤍", "النوم 22:30 😴"]
+        };
+
+        const workDaySchedule = [
+            { start: "00:00", end: "04:30", category: "النوم والراحة", title: "النوم العميق 💤", desc: "تطبيق بروتوكول جودة النوم لتهيئة الجهاز العصبي للفجر." },
+            { start: "04:30", end: "05:00", category: "الصلوات والروحانيات", title: "الاستيقاظ وصلاة الفجر جماعة 🌅", desc: "براح كامل للحمام والوضوء والصلاة جماعة بالمسجد." },
+            { start: "05:00", end: "07:30", category: "التركيز والتطوير", title: "بلوك المذاكرة الذهبي (الكورسات الصعبة) 🖥️", desc: "قسّم البلوك لـ 3 سبرينتات تركيز وفصل ذهني (Ultradian Rhythms) لحرق المحتوى الصعب." },
+            { start: "07:30", end: "08:00", category: "الصلوات والروحانيات", title: "ورد القرآن الكريم اليومي 📖", desc: "حفظ وتسميع الورد اليومي مع ركعتي سنة الفجر لتثبيته." },
+            { start: "08:00", end: "10:00", category: "الوظيفة والإنتاج", title: "بلوك العمل الأول (تقفيل المهام الكبيرة) 💼", desc: "إنجاز مهام الشغل والتقارير الأساسية قبل استيقاظ العائلة في هدوء كامل." },
+            { start: "10:00", end: "10:30", category: "العائلة والتغذية", title: "بريك الفطور المشترك مع الزوجة والابن 🍳", desc: "شحن طاقة عاطفية وتناول وجبة الفول أو الجبنة القريش السحرية." },
+            { start: "10:30", end: "13:00", category: "الوظيفة والإنتاج", title: "بلوك العمل الثاني + التسويق الشخصي 🌐", desc: "يتخلله براح صلاة الظهر (20 دقيقة) + نصف ساعة LinkedIn تسويق مهني." },
+            { start: "13:00", end: "14:00", category: "النوم والراحة", title: "القيلولة الشرعية المظبوطة 😴", desc: "ساعة نوم كاملة لإراحة وصيانة الجهاز العصبي المركزي." },
+            { start: "14:00", end: "17:00", category: "الوظيفة والإنتاج", title: "بلوك العمل الثالث + الإنجليزية 🗣️", desc: "يتخلله براح صلاة العصر (20 دقيقة) + نصف ساعة لـ Shadowing الإنجليزية المهنية." },
+            { start: "17:00", end: "18:30", category: "البيت والتطوير", title: "مشوار السنتر والخروج مع الزوجة 🚗", desc: "خروج وتصفير طاقة البيت، أو بلوك المشاريع الحرة وتحديث الـ CV (في الأيام ب)." },
+            { start: "18:30", end: "19:30", category: "الرياضة والصحة", title: "تمرين المقاتل الهجين (حديد + MMA) 🥊", desc: "تفريغ شحنة الكورتيزول ميكانيكياً وبناء القوة بمشاركة الطفل الصغير." },
+            { start: "19:30", end: "21:30", category: "العائلة والصلوات", title: "وقت العائلة المستقر والعشاء الخفيف 🥗", desc: "عشاء منظم مصفى، جلسة هادئة، وبراح صلاتي المغرب والعشاء بامتياز." },
+            { start: "21:30", end: "22:30", category: "المكافآت الحرة", title: "ساعة الترفيه والمكافأة النظيفة 🎮", desc: "اللعب بضمير مستريح تماماً وبدون أي جلد للذات." },
+            { start: "22:30", end: "24:00", category: "النوم والراحة", title: "النوم العميق 💤", desc: "تطبيق بروتوكول جودة النوم لتهيئة الجهاز العصبي للفجر." }
+        ];
+
+        const mondaySchedule = [
+            { start: "00:00", end: "08:00", category: "النوم والراحة", title: "النوم المتأخر الاستشفائي 💤", desc: "إراحة تامة للجهاز العصبي وإطالة فترات النوم." },
+            { start: "08:00", end: "18:30", category: "العائلة والترفيه", title: "الويكند العائلي الأكبر والفسحة الطويلة 🚗", desc: "خروج كامل مع الزوجة والطفل، تغيير جو، وتصفير كامل لعداد الإجهاد." },
+            { start: "18:30", end: "19:30", category: "الرياضة والصحة", title: "الاستشفاء النشط والإطالات العميقة (Active Recovery) 🧘", desc: "روتين إطالات كاملة لفك الحوض وتحفيز المرونة وإصلاح الجسم." },
+            { start: "19:30", end: "22:30", category: "العائلة والترفيه", title: "سهرة ويكند عائلية ممتعة 🍿", desc: "جلسة عائلية وسهرة مريحة دون التزام بضوابط النوم المبكرة." },
+            { start: "22:30", end: "24:00", category: "النوم والراحة", title: "الاستعداد للنوم العميق 💤", desc: "النوم الكافي لشحن طاقات الجسد." }
+        ];
+
+        const tuesdaySchedule = [
+            { start: "00:00", end: "04:30", category: "النوم والراحة", title: "النوم العميق 💤", desc: "تأمين النوم الكافي استعداداً للصيان المبكر." },
+            { start: "04:30", end: "05:00", category: "الصلوات والروحانيات", title: "الاستيقاظ وصلاة الفجر جماعة 🌅", desc: "صحيان مبكر لتثبيت إيقاع الساعة البيولوجية للجسم." },
+            { start: "05:00", end: "08:00", category: "التركيز والتطوير", title: "طبخ رقمي: مصنع محتوى LinkedIn ✍️", desc: "كتابة وجدولة 4 بوستات مهنية للأسبوع الجديد في الـ Drafts لعدم التشتت وسط العمل." },
+            { start: "08:00", end: "18:30", category: "البيت والتأمين", title: "الطبخ الحياتي وتجهيز وجبات الأسبوع (Batch Cooking) 🥗", desc: "شراء المستلزمات الأسبوعية وتجهيز وجبات العمل مع الزوجة لتدمير عشوائية الأكل." },
+            { start: "18:30", end: "19:30", category: "الرياضة والصحة", title: "الهندسة العضلية الدقيقة وتثبيت التكنيك 🥊", desc: "تمارين لتقوية القبضة، الرقبة، عضلات الكور، وملاكمة ظل بطيئة للتحكم." },
+            { start: "19:30", end: "22:30", category: "العائلة والصلوات", title: "وقت عائلي هادئ وعشاء خفيف 🥗", desc: "جلسة تواصل نقية وعشاء مصفى ونوم عميق 22:30." },
+            { start: "22:30", end: "24:00", category: "النوم والراحة", title: "النوم العميق 💤", desc: "النوم الكافي استعداداً لبدء أسبوع الفرم غداً الأربعاء." }
+        ];
+
+        const studyPhases = [
+            { name: "سبرينت التركيز الأول (50 دقيقة) 🧠", duration: 50 * 60, color: "#10B981" },
+            { name: "بريك الراحة الأول (10 دقائق) 🌬️", duration: 10 * 60, color: "#06B6D4" },
+            { name: "سبرينت التركيز الثاني (50 دقيقة) 🧠", duration: 50 * 60, color: "#10B981" },
+            { name: "بريك الراحة الثاني (10 دقائق) 🌬️", duration: 10 * 60, color: "#06B6D4" },
+            { name: "تقفيل وتثبيت سريع (30 دقيقة)", duration: 30 * 60, color: "#8B5CF6" }
+        ];
+
+        const lazyQuotes = [
+            "ابنك واقف بيراقبك برة وبيعتبرك السوبر هيرو بتاعه وبيردد تصرفاتك. هتعلمه إيه؟ إن البطل بيقفل لما يتعب ولا إن البطل بيكمل تمرين ومذاكرة حتى وهو ملوش مزاج؟ ابلع ريقك وقوم صفي دماغك!",
+            "الالتزام هو الفارق الحاسم بين الشخص الهاوي والشخص المحترف. اقطع التفكير وابدأ الفعل فوراً.",
+            "الشغف كذبة بتموت بعد أول نص ساعة من الصعوبة؛ لكن الانضباط الفولاذي هو المحرك الوحيد اللي بيوصلك لخط النهاية."
+        ];
+
+        const modalMetadata = {
+            'zero-day': {
+                icon: "🛡️",
+                title: "بروتوكول اليوم الصِفري (خط الدفاع الأخير)",
+                body: "لو واجهت أسوأ يوم في أسبوعك (مرض، تعب شديد، أو انقطاع نت وكهرباء كارثي)؛ ممنوع تقفل بـ 'صفر إنجاز'. نفّذ الحد الأدنى (10 دقائق فقط) لحفظ الهوية الانضباطية أمام خلايا دماغك: <br><strong class='text-neon-gold'>• قرآن:</strong> 3 آيات فقط | <strong class='text-neon-gold'>• كورس:</strong> فيديو دقيقتين | <strong class='text-neon-gold'>• تمرين:</strong> 10 عدات ضغط | <strong class='text-neon-gold'>• إنجليزي:</strong> مراجعة 3 كلمات."
+            },
+            'power-cut': {
+                icon: "🔌",
+                title: "خطة النور والنت قطع فجأة الفورية",
+                body: "بلوك الفجر لازم تكون مأمنه من بالليل: نزل فيديوهات الكورسات أوفلاين على الموبايل أو اللاب توب المشحون. لو النور قطع؛ افتح الفيديوهات الأوفلاين فوراً، أو اقلب البلوك فوراً لتطوير الإنجليزي (Shadowing) من الفيديوهات الصوتية المُحملة. دايماً خلي عندك خطة Offline جاهزة."
+            },
+            'guests': {
+                icon: "👥",
+                title: "صمام الطوارئ الأسرية (ضيوف جم فجأة)",
+                body: "صلة الرحم وإكرام الضيف أولوية مطلقة وفوق أي جدول. اقعد مع ضيوفك ببشاشة تامة وذهن حاضر. هذا اليوم يتحول أوتوماتيكياً لـ 'يوم الحد الأدنى' (Zero Day). بعد ما يمشوا، خد 5 دقائق نفّذ فيهم الحد الأدنى وتنام بضمير مرتاح لأن ضيافة أهلك جزء من نجاحك كأب صالح وزوج راقٍ."
+            },
+            'insomnia': {
+                icon: "🛌",
+                title: "بروتوكول قهر الأرق بيولوجياً",
+                body: "دخلت السرير ومش جايلك نوم وعينك عمالة تفتح؟ <strong class='text-neon-ruby'>إياك وتلمس الموبايل وتفتح ريلز!</strong> ده هيسهرك لـ 2 الفجر ويدمر فجر بكرة. ولّع كشاف خفيف جداً، وهات مصحف ورق أو كتاب ورق واقرأ فيه وأنت على السرير. القراءة الورقية في إضاءة خافتة تجهد العين وتفرز الميلاتونين لتنام في أقل من 10 دقائق."
+            }
+        };
+        // =========================================================================
+
         // Audio Synthesis Whistle & Beep (Web Audio API)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playChime(frequency = 587.33, duration = 0.3, type = 'triangle') {
@@ -716,16 +793,14 @@
             }
         }
 
-        // Clock Update
+        // Clock Update (Bug 1 Fix - Initialize gracefully)
         function updateClock() {
             const clockEl = document.getElementById('live-clock');
-            if (clockEl) {
+            if (clockEl && !simModeActive) {
                 const now = new Date();
                 clockEl.textContent = now.toLocaleTimeString('ar-EG');
             }
         }
-
-        // 100% Comprehensive Daily Activity Micro-Steps
 
         // Get custom Week ID starting on Wednesday to handle reset
         function getWarriorWeekID() {
@@ -737,7 +812,17 @@
             return wedDate.toISOString().substring(0, 10); 
         }
 
-        // Persistent State Handling
+        // Safe JSON Parse Helper (Bug 3 Fix)
+        function safeJSONParse(str, fallback) {
+            if (!str) return fallback;
+            try { 
+                return JSON.parse(str) || fallback; 
+            } catch(e) { 
+                return fallback; 
+            }
+        }
+
+        // Persistent State Handling (Bug 3 Fix - Robust Loading)
         function loadPersistence() {
             try {
                 const weekID = getWarriorWeekID();
@@ -752,24 +837,19 @@
                     quickTimers = [];
                     savePersistence();
                 } else {
-                    const storedHabits = localStorage.getItem('warrior_habits');
-                    const storedWater = localStorage.getItem('warrior_water');
-                    const storedSteps = localStorage.getItem('warrior_micro_steps');
-                    const storedSubTasks = localStorage.getItem('warrior_custom_subtasks');
-                    const storedTimers = localStorage.getItem('warrior_quick_timers');
-                    
-                    habitsCompleted = storedHabits ? JSON.parse(storedHabits) : {};
-                    waterCount = storedWater ? parseInt(storedWater) : 0;
-                    activeMicroChecklistState = storedSteps ? JSON.parse(storedSteps) : {};
-                    customSubTasks = storedSubTasks ? JSON.parse(storedSubTasks) : {};
-                    quickTimers = storedTimers ? JSON.parse(storedTimers) : [];
+                    habitsCompleted = safeJSONParse(localStorage.getItem('warrior_habits'), {});
+                    waterCount = parseInt(localStorage.getItem('warrior_water')) || 0;
+                    activeMicroChecklistState = safeJSONParse(localStorage.getItem('warrior_micro_steps'), {});
+                    customSubTasks = safeJSONParse(localStorage.getItem('warrior_custom_subtasks'), {});
+                    quickTimers = safeJSONParse(localStorage.getItem('warrior_quick_timers'), []);
                 }
             } catch (e) {
-                console.warn("حظر في التخزين، سيتم تهيئة المصفوفات افتراضياً.", e);
-                habitsCompleted = habitsCompleted || {};
-                activeMicroChecklistState = activeMicroChecklistState || {};
-                customSubTasks = customSubTasks || {};
-                quickTimers = quickTimers || [];
+                console.warn("Storage restricted or error, defaulting state.", e);
+                habitsCompleted = {};
+                activeMicroChecklistState = {};
+                customSubTasks = {};
+                quickTimers = [];
+                waterCount = 0;
             }
             
             if (document.getElementById('water-count')) document.getElementById('water-count').textContent = waterCount;
@@ -799,8 +879,8 @@
 
         function getActiveTime() {
             if (simModeActive) return simTime;
-            const date = new Date();
-            return date.toTimeString().substring(0, 5); 
+            const d = new Date();
+            return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0'); 
         }
 
         function resetHabits() {
@@ -993,7 +1073,7 @@
             });
         }
 
-        // NEW: CUSTOM SUB-TASKS ENGINE FUNCTIONS
+        // CUSTOM SUB-TASKS ENGINE FUNCTIONS
         function addCustomSubTask() {
             const input = document.getElementById('custom-subtask-input');
             const text = input.value.trim();
@@ -1080,7 +1160,7 @@
             }
         }
 
-        // NEW: QUICK TIMER PROTOCOL ENGINE (حلة الرز)
+        // QUICK TIMER PROTOCOL ENGINE (حلة الرز)
         function addQuickTimer() {
             const textInput = document.getElementById('quick-timer-text');
             const minsInput = document.getElementById('quick-timer-mins');
@@ -1204,13 +1284,6 @@
         }
 
         // STUDY TIMER ENGINE
-        const studyPhases = [
-            { name: "سبرينت التركيز الأول (50 دقيقة) 🧠", duration: 50 * 60, color: "#10B981" },
-            { name: "بريك الراحة الأول (10 دقائق) 🌬️", duration: 10 * 60, color: "#06B6D4" },
-            { name: "سبرينت التركيز الثاني (50 دقيقة) 🧠", duration: 50 * 60, color: "#10B981" },
-            { name: "بريك الراحة الثاني (10 دقائق) 🌬️", duration: 10 * 60, color: "#06B6D4" },
-            { name: "تقفيل وتثبيت سريع (30 دقيقة)", duration: 30 * 60, color: "#8B5CF6" }
-        ];
         let currentSprintPhase = 0;
         let sprintTimerInterval = null;
         let sprintTimeRemaining = studyPhases[0].duration;
@@ -1241,8 +1314,8 @@
         }
 
         function updateStudyTimerDisplay() {
-            const m = Math.floor(studyTimeRemaining / 60).toString().padStart(2, '0');
-            const s = (studyTimeRemaining % 60).toString().padStart(2, '0');
+            const m = Math.floor(sprintTimeRemaining / 60).toString().padStart(2, '0');
+            const s = (sprintTimeRemaining % 60).toString().padStart(2, '0');
             document.getElementById('study-countdown').textContent = `${m}:${s}`;
         }
 
@@ -1276,12 +1349,6 @@
         function resetStudyTimer() {
             setStudyPhase(currentSprintPhase);
         }
-
-        const lazyQuotes = [
-            "ابنك واقف بيراقبك برة وبيعتبرك السوبر هيرو بتاعه وبيردد تصرفاتك. هتعلمه إيه؟ إن البطل بيقفل لما يتعب ولا إن البطل بيكمل تمرين ومذاكرة حتى وهو ملوش مزاج؟ ابلع ريقك وقوم صفي دماغك!",
-            "الالتزام هو الفارق الحاسم بين الشخص الهاوي والشخص المحترف. اقطع التفكير وابدأ الفعل فوراً.",
-            "الشغف كذبة بتموت بعد أول نص ساعة من الصعوبة؛ لكن الانضباط الفولاذي هو المحرك الوحيد اللي بيوصلك لخط النهاية."
-        ];
 
         function triggerLazyAdvice() {
             const randomIndex = Math.floor(Math.random() * lazyQuotes.length);
@@ -1488,29 +1555,6 @@
         }
 
         // CONSTITUTION ALERTS
-        const modalMetadata = {
-            'zero-day': {
-                icon: "🛡️",
-                title: "بروتوكول اليوم الصِفري (خط الدفاع الأخير)",
-                body: "لو واجهت أسوأ يوم في أسبوعك (مرض، تعب شديد، أو انقطاع نت وكهرباء كارثي)؛ ممنوع تقفل بـ 'صفر إنجاز'. نفّذ الحد الأدنى (10 دقائق فقط) لحفظ الهوية الانضباطية أمام خلايا دماغك: <br><strong class='text-neon-gold'>• قرآن:</strong> 3 آيات فقط | <strong class='text-neon-gold'>• كورس:</strong> فيديو دقيقتين | <strong class='text-neon-gold'>• تمرين:</strong> 10 عدات ضغط | <strong class='text-neon-gold'>• إنجليزي:</strong> مراجعة 3 كلمات."
-            },
-            'power-cut': {
-                icon: "🔌",
-                title: "خطة النور والنت قطع فجأة الفورية",
-                body: "بلوك الفجر لازم تكون مأمنه من بالليل: نزل فيديوهات الكورسات أوفلاين على الموبايل أو اللاب توب المشحون. لو النور قطع؛ افتح الفيديوهات الأوفلاين فوراً، أو اقلب البلوك فوراً لتطوير الإنجليزي (Shadowing) من الفيديوهات الصوتية المُحملة. دايماً خلي عندك خطة Offline جاهزة."
-            },
-            'guests': {
-                icon: "👥",
-                title: "صمام الطوارئ الأسرية (ضيوف جم فجأة)",
-                body: "صلة الرحم وإكرام الضيف أولوية مطلقة وفوق أي جدول. اقعد مع ضيوفك ببشاشة تامة وذهن حاضر. هذا اليوم يتحول أوتوماتيكياً لـ 'يوم الحد الأدنى' (Zero Day). بعد ما يمشوا، خد 5 دقائق نفّذ فيهم الحد الأدنى وتنام بضمير مرتاح لأن ضيافة أهلك جزء من نجاحك كأب صالح وزوج راقٍ."
-            },
-            'insomnia': {
-                icon: "🛌",
-                title: "بروتوكول قهر الأرق بيولوجياً",
-                body: "دخلت السرير ومش جايلك نوم وعينك عمالة تفتح؟ <strong class='text-neon-ruby'>إياك وتلمس الموبايل وتفتح ريلز!</strong> ده هيسهرك لـ 2 الفجر ويدمر فجر بكرة. ولّع كشاف خفيف جداً، وهات مصحف ورق أو كتاب ورق واقرأ فيه وأنت على السرير. القراءة الورقية في إضاءة خافتة تجهد العين وتفرز الميلاتونين لتنام في أقل من 10 دقائق."
-            }
-        };
-
         function showQuickModal(key) {
             const meta = modalMetadata[key];
             if (meta) showModal(meta.title, meta.body, meta.icon);
@@ -1539,63 +1583,27 @@
             }
         }
 
-        // Active week schedule databases
-        const workDaySchedule = [
-            { start: "00:00", end: "04:30", category: "النوم والراحة", title: "النوم العميق 💤", desc: "تطبيق بروتوكول جودة النوم لتهيئة الجهاز العصبي للفجر." },
-            { start: "04:30", end: "05:00", category: "الصلوات والروحانيات", title: "الاستيقاظ وصلاة الفجر جماعة 🌅", desc: "براح كامل للحمام والوضوء والصلاة جماعة بالمسجد." },
-            { start: "05:00", end: "07:30", category: "التركيز والتطوير", title: "بلوك المذاكرة الذهبي (الكورسات الصعبة) 🖥️", desc: "قسّم البلوك لـ 3 سبرينتات تركيز وفصل ذهني (Ultradian Rhythms) لحرق المحتوى الصعب." },
-            { start: "07:30", end: "08:00", category: "الصلوات والروحانيات", title: "ورد القرآن الكريم اليومي 📖", desc: "حفظ وتسميع الورد اليومي مع ركعتي سنة الفجر لتثبيته." },
-            { start: "08:00", end: "10:00", category: "الوظيفة والإنتاج", title: "بلوك العمل الأول (تقفيل المهام الكبيرة) 💼", desc: "إنجاز مهام الشغل والتقارير الأساسية قبل استيقاظ العائلة في هدوء كامل." },
-            { start: "10:00", end: "10:30", category: "العائلة والتغذية", title: "بريك الفطور المشترك مع الزوجة والابن 🍳", desc: "شحن طاقة عاطفية وتناول وجبة الفول أو الجبنة القريش السحرية." },
-            { start: "10:30", end: "13:00", category: "الوظيفة والإنتاج", title: "بلوك العمل الثاني + التسويق الشخصي 🌐", desc: "يتخلله براح صلاة الظهر (20 دقيقة) + نصف ساعة LinkedIn تسويق مهني." },
-            { start: "13:00", end: "14:00", category: "النوم والراحة", title: "القيلولة الشرعية المظبوطة 😴", desc: "ساعة نوم كاملة لإراحة وصيانة الجهاز العصبي المركزي." },
-            { start: "14:00", end: "17:00", category: "الوظيفة والإنتاج", title: "بلوك العمل الثالث + الإنجليزية 🗣️", desc: "يتخلله براح صلاة العصر (20 دقيقة) + نصف ساعة لـ Shadowing الإنجليزية المهنية." },
-            { start: "17:00", end: "18:30", category: "البيت والتطوير", title: "مشوار السنتر والخروج مع الزوجة 🚗", desc: "خروج وتصفير طاقة البيت، أو بلوك المشاريع الحرة وتحديث الـ CV (في الأيام ب)." },
-            { start: "18:30", end: "19:30", category: "الرياضة والصحة", title: "تمرين المقاتل الهجين (حديد + MMA) 🥊", desc: "تفريغ شحنة الكورتيزول ميكانيكياً وبناء القوة بمشاركة الطفل الصغير." },
-            { start: "19:30", end: "21:30", category: "العائلة والصلوات", title: "وقت العائلة المستقر والعشاء الخفيف 🥗", desc: "عشاء منظم مصفى، جلسة هادئة، وبراح صلاتي المغرب والعشاء بامتياز." },
-            { start: "21:30", end: "22:30", category: "المكافآت الحرة", title: "ساعة الترفيه والمكافأة النظيفة 🎮", desc: "اللعب بضمير مستريح تماماً وبدون أي جلد للذات." },
-            { start: "22:30", end: "24:00", category: "النوم والراحة", title: "النوم العميق 💤", desc: "تطبيق بروتوكول جودة النوم لتهيئة الجهاز العصبي للفجر." }
-        ];
-
-        const mondaySchedule = [
-            { start: "00:00", end: "08:00", category: "النوم والراحة", title: "النوم المتأخر الاستشفائي 💤", desc: "إراحة تامة للجهاز العصبي وإطالة فترات النوم." },
-            { start: "08:00", end: "18:30", category: "العائلة والترفيه", title: "الويكند العائلي الأكبر والفسحة الطويلة 🚗", desc: "خروج كامل مع الزوجة والطفل، تغيير جو، وتصفير كامل لعداد الإجهاد." },
-            { start: "18:30", end: "19:30", category: "الرياضة والصحة", title: "الاستشفاء النشط والإطالات العميقة (Active Recovery) 🧘", desc: "روتين إطالات كاملة لفك الحوض وتحفيز المرونة وإصلاح الجسم." },
-            { start: "19:30", end: "22:30", category: "العائلة والترفيه", title: "سهرة ويكند عائلية ممتعة 🍿", desc: "جلسة عائلية وسهرة مريحة دون التزام بضوابط النوم المبكرة." },
-            { start: "22:30", end: "24:00", category: "النوم والراحة", title: "الاستعداد للنوم العميق 💤", desc: "النوم الكافي لشحن طاقات الجسد." }
-        ];
-
-        const tuesdaySchedule = [
-            { start: "00:00", end: "04:30", category: "النوم والراحة", title: "النوم العميق 💤", desc: "تأمين النوم الكافي استعداداً للصيان المبكر." },
-            { start: "04:30", end: "05:00", category: "الصلوات والروحانيات", title: "الاستيقاظ وصلاة الفجر جماعة 🌅", desc: "صحيان مبكر لتثبيت إيقاع الساعة البيولوجية للجسم." },
-            { start: "05:00", end: "08:00", category: "التركيز والتطوير", title: "طبخ رقمي: مصنع محتوى LinkedIn ✍️", desc: "كتابة وجدولة 4 بوستات مهنية للأسبوع الجديد في الـ Drafts لعدم التشتت وسط العمل." },
-            { start: "08:00", end: "18:30", category: "البيت والتأمين", title: "الطبخ الحياتي وتجهيز وجبات الأسبوع (Batch Cooking) 🥗", desc: "شراء المستلزمات الأسبوعية وتجهيز وجبات العمل مع الزوجة لتدمير عشوائية الأكل." },
-            { start: "18:30", end: "19:30", category: "الرياضة والصحة", title: "الهندسة العضلية الدقيقة وتثبيت التكنيك 🥊", desc: "تمارين لتقوية القبضة، الرقبة، عضلات الكور، وملاكمة ظل بطيئة للتحكم." },
-            { start: "19:30", end: "22:30", category: "العائلة والصلوات", title: "وقت عائلي هادئ وعشاء خفيف 🥗", desc: "جلسة تواصل نقية وعشاء مصفى ونوم عميق 22:30." },
-            { start: "22:30", end: "24:00", category: "النوم والراحة", title: "النوم العميق 💤", desc: "النوم الكافي استعداداً لبدء أسبوع الفرم غداً الأربعاء." }
-        ];
-
         // Boot
         function bootSystem() {
-    updateClock();
-    loadPersistence();
-    setStudyPhase(0);
-    updateChronologyCompass();
-    renderHabitsForDay();
-    
-    setInterval(() => {
-        updateClock();
-        if (!simModeActive) { getDaySchedule && updateChronologyCompass(); }
-        checkQuickTimers && checkQuickTimers();
-    }, 1000);
-}
+            updateClock();
+            loadPersistence();
+            setStudyPhase(0);
+            updateChronologyCompass();
+            renderHabitsForDay();
+            
+            setInterval(() => {
+                updateClock();
+                if (!simModeActive) { updateChronologyCompass(); }
+                if (typeof checkQuickTimers === 'function') checkQuickTimers();
+            }, 1000);
+        }
 
-// السطر السحري: لو الصفحة فتحت بسرعة، اشتغل فوراً وبدون انتظار
-if (document.readyState === "complete" || document.readyState === "interactive") {
-    bootSystem();
-} else {
-    document.addEventListener("DOMContentLoaded", bootSystem);
-}
+        // السطر السحري: لو الصفحة فتحت بسرعة، اشتغل فوراً وبدون انتظار
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+            bootSystem();
+        } else {
+            document.addEventListener("DOMContentLoaded", bootSystem);
+        }
     </script>
 </body>
 </html>
