@@ -561,7 +561,7 @@
                 "تابع الشغل الفعلي وخلص تارجت مهامك اليومية.",
                 "الساعة 14:30: حضّر كوب النسكافيه بلاك الثاني لزيادة طاقة ما بعد القيلولة.",
                 "الساعة 15:30: خصص 30 دقيقة لـ Shadowing الإنجليزي المهني (اسمع مقطع بالإنجليزية وكرره بصوت عالي).",
-                "عند سماع أذان العصر: اتوضأ واشرب كأسي مياه، وصلي العصر، وتناول السناك الدوباميني (3 تمرات ومشتملات السوداني)."
+                "عند سماع أذان العصر: اتوضأ واشرب كأسي مياه، وصلي العصر, وتناول السناك الدوباميني (3 تمرات ومشتملات السوداني)."
             ],
             "17:00-18:30": [
                 "تطبيق طقس الإغلاق الإدراكي: اكتب مهام بكرة، اقفل اللاب فيزيائياً وودع الموظف.",
@@ -730,42 +730,54 @@
 
         // Persistent State Handling
         function loadPersistence() {
-            const weekID = getWarriorWeekID();
-            const storedWeek = localStorage.getItem('warrior_week_current');
-            
-            if (storedWeek !== weekID) {
-                localStorage.setItem('warrior_week_current', weekID);
-                waterCount = 0;
-                habitsCompleted = {};
-                activeMicroChecklistState = {};
-                customSubTasks = {};
-                quickTimers = [];
-                savePersistence();
-            } else {
-                const storedHabits = localStorage.getItem('warrior_habits');
-                const storedWater = localStorage.getItem('warrior_water');
-                const storedSteps = localStorage.getItem('warrior_micro_steps');
-                const storedSubTasks = localStorage.getItem('warrior_custom_subtasks');
-                const storedTimers = localStorage.getItem('warrior_quick_timers');
+            try {
+                const weekID = getWarriorWeekID();
+                const storedWeek = localStorage.getItem('warrior_week_current');
                 
-                if (storedHabits) habitsCompleted = JSON.parse(storedHabits);
-                if (storedWater) waterCount = parseInt(storedWater) || 0;
-                if (storedSteps) activeMicroChecklistState = JSON.parse(storedSteps);
-                if (storedSubTasks) customSubTasks = JSON.parse(storedSubTasks);
-                if (storedTimers) quickTimers = JSON.parse(storedTimers);
+                if (storedWeek !== weekID) {
+                    localStorage.setItem('warrior_week_current', weekID);
+                    waterCount = 0;
+                    habitsCompleted = {};
+                    activeMicroChecklistState = {};
+                    customSubTasks = {};
+                    quickTimers = [];
+                    savePersistence();
+                } else {
+                    const storedHabits = localStorage.getItem('warrior_habits');
+                    const storedWater = localStorage.getItem('warrior_water');
+                    const storedSteps = localStorage.getItem('warrior_micro_steps');
+                    const storedSubTasks = localStorage.getItem('warrior_custom_subtasks');
+                    const storedTimers = localStorage.getItem('warrior_quick_timers');
+                    
+                    habitsCompleted = storedHabits ? JSON.parse(storedHabits) : {};
+                    waterCount = storedWater ? parseInt(storedWater) : 0;
+                    activeMicroChecklistState = storedSteps ? JSON.parse(storedSteps) : {};
+                    customSubTasks = storedSubTasks ? JSON.parse(storedSubTasks) : {};
+                    quickTimers = storedTimers ? JSON.parse(storedTimers) : [];
+                }
+            } catch (e) {
+                console.warn("حظر في التخزين، سيتم تهيئة المصفوفات افتراضياً.", e);
+                habitsCompleted = habitsCompleted || {};
+                activeMicroChecklistState = activeMicroChecklistState || {};
+                customSubTasks = customSubTasks || {};
+                quickTimers = quickTimers || [];
             }
             
-            document.getElementById('water-count').textContent = waterCount;
-            document.getElementById('water-liters').textContent = (waterCount * 0.3).toFixed(1);
+            if (document.getElementById('water-count')) document.getElementById('water-count').textContent = waterCount;
+            if (document.getElementById('water-liters')) document.getElementById('water-liters').textContent = (waterCount * 0.3).toFixed(1);
             renderQuickTimers();
         }
 
         function savePersistence() {
-            localStorage.setItem('warrior_habits', JSON.stringify(habitsCompleted));
-            localStorage.setItem('warrior_water', waterCount.toString());
-            localStorage.setItem('warrior_micro_steps', JSON.stringify(activeMicroChecklistState));
-            localStorage.setItem('warrior_custom_subtasks', JSON.stringify(customSubTasks));
-            localStorage.setItem('warrior_quick_timers', JSON.stringify(quickTimers));
+            try {
+                localStorage.setItem('warrior_habits', JSON.stringify(habitsCompleted || {}));
+                localStorage.setItem('warrior_water', (waterCount || 0).toString());
+                localStorage.setItem('warrior_micro_steps', JSON.stringify(activeMicroChecklistState || {}));
+                localStorage.setItem('warrior_custom_subtasks', JSON.stringify(customSubTasks || {}));
+                localStorage.setItem('warrior_quick_timers', JSON.stringify(quickTimers || []));
+            } catch (e) {
+                console.warn("حظر مؤقت للكتابة على الذاكرة المحلية.", e);
+            }
             updateHabitGauge();
         }
 
@@ -799,6 +811,7 @@
             const currentDay = getActiveDay();
             const dayHabits = dayHabitsMetadata[currentDay];
             
+            if(!container || !dayHabits) return;
             container.innerHTML = '';
             
             dayHabits.forEach((habitName, idx) => {
@@ -848,6 +861,7 @@
         function updateHabitGauge() {
             const currentDay = getActiveDay();
             const dayHabits = dayHabitsMetadata[currentDay];
+            if(!dayHabits) return;
             let checkedCount = 0;
             
             dayHabits.forEach((_, idx) => {
@@ -858,19 +872,21 @@
             const percent = Math.round((checkedCount / dayHabits.length) * 100) || 0;
             const strokeDashOffset = 175.9 - (175.9 * percent) / 100;
             
-            document.getElementById('habit-gauge-fill').setAttribute('stroke-dashoffset', strokeDashOffset);
-            document.getElementById('habit-gauge-text').textContent = `${percent}%`;
+            if(document.getElementById('habit-gauge-fill')) document.getElementById('habit-gauge-fill').setAttribute('stroke-dashoffset', strokeDashOffset);
+            if(document.getElementById('habit-gauge-text')) document.getElementById('habit-gauge-text').textContent = `${percent}%`;
             
             const statusEl = document.getElementById('habit-gauge-status');
-            if (percent === 100) {
-                statusEl.textContent = "مستوى مقاتل أسطوري! 🏆";
-                statusEl.className = "text-xs font-black text-neon-cyan mt-0.5";
-            } else if (percent >= 50) {
-                statusEl.textContent = "استمر؛ فاضل تكات بسيطة! ⚡";
-                statusEl.className = "text-xs font-black text-neon-emerald mt-0.5";
-            } else {
-                statusEl.textContent = "ابدأ الفرم الآن! 🥊";
-                statusEl.className = "text-xs font-black text-neon-gold mt-0.5";
+            if (statusEl) {
+                if (percent === 100) {
+                    statusEl.textContent = "مستوى مقاتل أسطوري! 🏆";
+                    statusEl.className = "text-xs font-black text-neon-cyan mt-0.5";
+                } else if (percent >= 50) {
+                    statusEl.textContent = "استمر؛ فاضل تكات بسيطة! ⚡";
+                    statusEl.className = "text-xs font-black text-neon-emerald mt-0.5";
+                } else {
+                    statusEl.textContent = "ابدأ الفرم الآن! 🥊";
+                    statusEl.className = "text-xs font-black text-neon-gold mt-0.5";
+                }
             }
         }
 
@@ -950,6 +966,7 @@
             const key = `${block.start}-${block.end}`;
             const steps = taskMicroSteps[key] || ["لا توجد خطوات دقيقة مسجلة لهذه الفترة. ركز على التنفيذ الهادئ."];
             
+            if(!container) return;
             container.innerHTML = '';
             steps.forEach((stepText, idx) => {
                 const stepID = `${getActiveDay()}_${key}_${idx}`;
@@ -1013,6 +1030,7 @@
 
         function renderCustomSubTasks(blockKey) {
             const container = document.getElementById('custom-subtasks-list');
+            if(!container) return;
             container.innerHTML = '';
             
             const tasks = customSubTasks[blockKey] || [];
@@ -1088,9 +1106,10 @@
 
         function renderQuickTimers() {
             const container = document.getElementById('quick-timers-container');
+            if(!container) return;
             container.innerHTML = '';
 
-            if (quickTimers.length === 0) {
+            if (!quickTimers || quickTimers.length === 0) {
                 container.innerHTML = `<p class="text-[10px] text-slate-500 text-center py-1">لا توجد مؤقتات طوارئ طارئة حالياً.</p>`;
                 return;
             }
@@ -1109,6 +1128,7 @@
         }
 
         function checkQuickTimers() {
+            if (!quickTimers) return;
             const now = Date.now();
             let triggered = false;
 
@@ -1287,13 +1307,14 @@
                 "Wednesday": "الأربعاء (حديد + MMA)", "Thursday": "الخميس (HIIT وكور)", "Friday": "الجمعة (أرجل ومستوى)",
                 "Saturday": "السبت (سبارينج ظل)", "Sunday": "الأحد (قوة وضخ دم)", "Monday": "الاثنين (استشفاء نشط)", "Tuesday": "الثلاثاء (رقبة وقبضة)"
             };
-            document.getElementById('workout-day-badge').textContent = dayArabicMap[day];
+            if(document.getElementById('workout-day-badge')) document.getElementById('workout-day-badge').textContent = dayArabicMap[day];
             renderExercisesList();
             loadExercise(0);
         }
 
         function renderExercisesList() {
             const container = document.getElementById('workout-exercises-list');
+            if(!container) return;
             container.innerHTML = '';
             dayExercises.forEach((exc, idx) => {
                 const totalSets = exc.sets.length;
@@ -1347,6 +1368,7 @@
 
         function renderSetsTracker(exc) {
             const container = document.getElementById('exercise-sets-tracker');
+            if(!container) return;
             container.innerHTML = '';
             
             exc.sets.forEach((set, idx) => {
@@ -1402,7 +1424,7 @@
                 if (restTimeRemaining <= 0) {
                     clearInterval(restTimerInterval);
                     document.getElementById('workout-rest-btn').textContent = "تفعيل مؤقت الراحة";
-                    document.getElementById('workout-rest-btn').className = "bg-neon-cyan hover:bg-neon-cyan/90 text-slate-950 font-black px-4 py-1.5 rounded-lg text-[10px] transition";
+                    document.getElementById('workout-rest-btn').className = "bg-neon-cyan text-slate-950 font-black px-4 py-1.5 rounded-lg text-[10px] transition";
                     
                     playChime(1200, 0.3, 'sine');
                     setTimeout(() => playChime(1200, 0.3, 'sine'), 150);
@@ -1545,7 +1567,7 @@
         ];
 
         const tuesdaySchedule = [
-            { start: "00:00", end: "04:30", category: "النوم والراحة", title: "النوم العميق 💤", desc: "تأمين النوم الكافي استعداداً للصحيان المبكر." },
+            { start: "00:00", end: "04:30", category: "النوم والراحة", title: "النوم العميق 💤", desc: "تأمين النوم الكافي استعداداً للصيان المبكر." },
             { start: "04:30", end: "05:00", category: "الصلوات والروحانيات", title: "الاستيقاظ وصلاة الفجر جماعة 🌅", desc: "صحيان مبكر لتثبيت إيقاع الساعة البيولوجية للجسم." },
             { start: "05:00", end: "08:00", category: "التركيز والتطوير", title: "طبخ رقمي: مصنع محتوى LinkedIn ✍️", desc: "كتابة وجدولة 4 بوستات مهنية للأسبوع الجديد في الـ Drafts لعدم التشتت وسط العمل." },
             { start: "08:00", end: "18:30", category: "البيت والتأمين", title: "الطبخ الحياتي وتجهيز وجبات الأسبوع (Batch Cooking) 🥗", desc: "شراء المستلزمات الأسبوعية وتجهيز وجبات العمل مع الزوجة لتدمير عشوائية الأكل." },
@@ -1556,6 +1578,7 @@
 
         // Boot
         window.onload = function() {
+            updateClock();
             loadPersistence();
             setStudyPhase(0);
             updateChronologyCompass();
