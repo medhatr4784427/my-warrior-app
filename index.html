@@ -1577,22 +1577,26 @@
         ];
 
         // Boot
-        window.onload = function() {
-            updateClock();
-            loadPersistence();
-            setStudyPhase(0);
-            updateChronologyCompass();
-            renderHabitsForDay();
-            
-            // تحديث دوري ميكانيكي كل ثانية لضمان تفعيل الوقت أوتوماتيكياً ودقة المنبهات اللحظية
-            setInterval(() => {
-                updateClock();
-                if (!simModeActive) {
-                    updateChronologyCompass();
-                }
-                checkQuickTimers();
-            }, 1000);
-        }
+        function bootSystem() {
+    updateClock();
+    loadPersistence();
+    setStudyPhase(0);
+    updateChronologyCompass();
+    renderHabitsForDay();
+    
+    setInterval(() => {
+        updateClock();
+        if (!simModeActive) { getDaySchedule && updateChronologyCompass(); }
+        checkQuickTimers && checkQuickTimers();
+    }, 1000);
+}
+
+// السطر السحري: لو الصفحة فتحت بسرعة، اشتغل فوراً وبدون انتظار
+if (document.readyState === "complete" || document.readyState === "interactive") {
+    bootSystem();
+} else {
+    document.addEventListener("DOMContentLoaded", bootSystem);
+}
     </script>
 </body>
 </html>
