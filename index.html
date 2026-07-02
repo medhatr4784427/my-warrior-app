@@ -459,56 +459,15 @@
         let activeMicroChecklistState = {};
         let customSubTasks = {}; 
         let quickTimers = [];
-
-        // Audio Synthesis Whistle & Beep (Web Audio API)
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playChime(frequency = 587.33, duration = 0.3, type = 'triangle') {
-            try {
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.type = type;
-                osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-                osc.start(audioCtx.currentTime);
-                osc.stop(audioCtx.currentTime + duration);
-            } catch (e) {
-                console.log("AudioContext blocked or error:", e);
-            }
-        }
-
-        // Grayscale mode
-        function toggleGrayscaleMode() {
-            const body = document.body;
-            const btn = document.getElementById('grayscale-btn');
-            const txt = document.getElementById('grayscale-text');
-            if (isGrayscaleMode) {
-                body.classList.remove('grayscale-mode');
-                txt.textContent = "حظر الدوبامين";
-                btn.className = "bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700/60 text-xs font-bold transition hover:bg-slate-700 hover:text-white flex items-center gap-1.5";
-                isGrayscaleMode = false;
-            } else {
-                body.classList.add('grayscale-mode');
-                txt.textContent = "إلغاء الفلتر";
-                btn.className = "bg-neon-ruby text-white px-3 py-1.5 rounded-xl border border-neon-ruby/30 text-xs font-bold transition flex items-center gap-1.5";
-                isGrayscaleMode = true;
-                playChime(330, 0.4);
-            }
-        }
-
-        // Clock Update
-        function updateClock() {
-            const clockEl = document.getElementById('live-clock');
-            if (clockEl) {
-                const now = new Date();
-                clockEl.textContent = now.toLocaleTimeString('ar-EG');
-            }
-        }
-
-        // 100% Comprehensive Daily Activity Micro-Steps
+        const dayHabitsMetadata = {
+            "Wednesday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Thursday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Friday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Saturday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Sunday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
+            "Monday": ["قيلولة فجرية 🌅", "ورد القرآن 📖", "التدريب والاستشفاء 🥊", "الخروج العائلي الكبير 🚗", "الـ 10 دقائق العاطفية 🤍", "النوم المرن 😴"],
+            "Tuesday": ["كتابة وجدولة البوستات 🌅", "ورد القرآن 📖", "تجهيز وجبات الأسبوع 🥗", "الهندسة العضلية الدقيقة 🥊", "الـ 10 دقائق والصلوات 🤍", "النوم 22:30 😴"]
+        };
         const taskMicroSteps = {
             "00:00-04:30": [
                 "اتأكد إن الشاشات مقفولة وموبيلك أبيض وأسود.",
@@ -718,6 +677,56 @@
             ]
         };
 
+        // Audio Synthesis Whistle & Beep (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playChime(frequency = 587.33, duration = 0.3, type = 'triangle') {
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = type;
+                osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("AudioContext blocked or error:", e);
+            }
+        }
+
+        // Grayscale mode
+        function toggleGrayscaleMode() {
+            const body = document.body;
+            const btn = document.getElementById('grayscale-btn');
+            const txt = document.getElementById('grayscale-text');
+            if (isGrayscaleMode) {
+                body.classList.remove('grayscale-mode');
+                txt.textContent = "حظر الدوبامين";
+                btn.className = "bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700/60 text-xs font-bold transition hover:bg-slate-700 hover:text-white flex items-center gap-1.5";
+                isGrayscaleMode = false;
+            } else {
+                body.classList.add('grayscale-mode');
+                txt.textContent = "إلغاء الفلتر";
+                btn.className = "bg-neon-ruby text-white px-3 py-1.5 rounded-xl border border-neon-ruby/30 text-xs font-bold transition flex items-center gap-1.5";
+                isGrayscaleMode = true;
+                playChime(330, 0.4);
+            }
+        }
+
+        // Clock Update
+        function updateClock() {
+            const clockEl = document.getElementById('live-clock');
+            if (clockEl) {
+                const now = new Date();
+                clockEl.textContent = now.toLocaleTimeString('ar-EG');
+            }
+        }
+
+        // 100% Comprehensive Daily Activity Micro-Steps
+
         // Get custom Week ID starting on Wednesday to handle reset
         function getWarriorWeekID() {
             const d = new Date();
@@ -847,16 +856,6 @@
             renderHabitsForDay();
             playChime(habitsCompleted[habitId] ? 600 : 300, 0.15);
         }
-
-        const dayHabitsMetadata = {
-            "Wednesday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
-            "Thursday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
-            "Friday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
-            "Saturday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
-            "Sunday": ["الفجر والكورس 🌅", "ورد القرآن 📖", "تارجت الشغل 💼", "التمرين والـ MMA 🥊", "الـ 10 دقائق والسنتر 🤍", "النوم 22:30 😴"],
-            "Monday": ["قيلولة فجرية 🌅", "ورد القرآن 📖", "التدريب والاستشفاء 🥊", "الخروج العائلي الكبير 🚗", "الـ 10 دقائق العاطفية 🤍", "النوم المرن 😴"],
-            "Tuesday": ["كتابة وجدولة البوستات 🌅", "ورد القرآن 📖", "تجهيز وجبات الأسبوع 🥗", "الهندسة العضلية الدقيقة 🥊", "الـ 10 دقائق والصلوات 🤍", "النوم 22:30 😴"]
-        };
 
         function updateHabitGauge() {
             const currentDay = getActiveDay();
